@@ -1,0 +1,61 @@
+# Kernel build products
+**/out/
+**/build/
+*.o
+*.a
+*.ko
+*.mod
+*.mod.c
+*.symvers
+modules.order
+Module.symvers
+System.map
+vmlinux*
+Image
+Image.gz
+*.dtb
+*.dtbo
+*.cpio
+*.cpio.gz
+*.img
+*.bin
+
+# Firmware, vendor blobs, and source archives
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.7z
+*.lz4
+*.apk
+*.so
+*.pit
+
+# Credentials and local environment
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.keystore
+secrets.*
+credentials.*
+local.properties
+*.local
+
+# Host/editor noise
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Local logs and reports may contain personal paths or firmware-derived data
+*.log
+local-evidence/
+private-evidence/
+!docs/evidence/ram-compat-object-build.log
+
+# Local-only firmware-derived candidate; retain in the worktree, exclude from releases
+/patches/device-tree/0001-a02-arm64-pmu-compat.patch

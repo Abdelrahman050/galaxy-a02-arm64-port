@@ -1,0 +1,25 @@
+--- a/drivers/misc/mediatek/gpu/gpu_rgx/m1.13ED5776728/services/system/rogue/rgx_mtk/mt6739/mtk_mfgsys.c
++++ b/drivers/misc/mediatek/gpu/gpu_rgx/m1.13ED5776728/services/system/rogue/rgx_mtk/mt6739/mtk_mfgsys.c
+@@ -445,7 +445,6 @@
+ /* For ged_dvfs idx commit */
+ static void MTKCommitFreqIdx(unsigned long ui32NewFreqID, GED_DVFS_COMMIT_TYPE eCommitType, int *pbCommited)
+ {
+-	PVRSRV_DEV_POWER_STATE ePowerState;
+ 	PVRSRV_DEVICE_NODE *psDevNode = MTKGetRGXDevNode();
+ 	PVRSRV_ERROR eResult;
+ 
+@@ -457,7 +456,13 @@
+ 			unsigned int ui32CurFreqID;
+ 			PVRSRV_DEV_POWER_STATE ePowerState;
+ 
+-			PVRSRVGetDevicePowerState(psDevNode, &ePowerState);
++			if (PVRSRVGetDevicePowerState(psDevNode, &ePowerState) != PVRSRV_OK) {
++				if (eResult == PVRSRV_OK)
++					PVRSRVDevicePostClockSpeedChange(psDevNode, IMG_FALSE, (void *)NULL);
++				if (pbCommited)
++					*pbCommited = IMG_FALSE;
++				return;
++			}
+ 
+ 			if (ePowerState == PVRSRV_DEV_POWER_STATE_ON) {
+ 				mt_gpufreq_target(ui32NewFreqID);

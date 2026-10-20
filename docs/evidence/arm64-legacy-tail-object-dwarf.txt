@@ -1,0 +1,107 @@
+$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/drivers/misc/mediatek/ram_console/mtk_ram_console.o:	file format ELF64-aarch64-little
+
+0x00009f70: DW_TAG_structure_type
+              DW_AT_name	("last_reboot_reason_legacy_tail")
+              DW_AT_byte_size	(0x0468)
+              DW_AT_decl_file	("$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+              DW_AT_decl_line	(227)
+
+0x00009f79:   DW_TAG_member
+                DW_AT_name	("common")
+                DW_AT_type	(0x0000a02f "u8[828]")
+                DW_AT_decl_file	("$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+                DW_AT_decl_line	(228)
+                DW_AT_data_member_location	(0x00)
+
+0x00009f85:   DW_TAG_member
+                DW_AT_name	("last_init_func")
+                DW_AT_type	(0x000007de "u32")
+                DW_AT_decl_file	("$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+                DW_AT_decl_line	(229)
+                DW_AT_data_member_location	(0x033c)
+
+0x00009f92:   DW_TAG_member
+                DW_AT_name	("pmic_ext_buck")
+                DW_AT_type	(0x00003a05 "u8")
+                DW_AT_decl_file	("$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+                DW_AT_decl_line	(230)
+                DW_AT_data_member_location	(0x0340)
+
+0x00009f9f:   DW_TAG_member
+                DW_AT_name	("padding")
+                DW_AT_type	(0x0000a03c "u8[3]")
+                DW_AT_decl_file	("$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+                DW_AT_decl_line	(231)
+                DW_AT_data_member_location	(0x0341)
+
+0x00009fac:   DW_TAG_member
+                DW_AT_name	("hang_detect_timeout_count")
+                DW_AT_type	(0x000007de "u32")
+                DW_AT_decl_file	("$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+                DW_AT_decl_line	(232)
+                DW_AT_data_member_location	(0x0344)
+
+0x00009fb9:   DW_TAG_member
+                DW_AT_name	("last_async_func")
+                DW_AT_type	(0x000007de "u32")
+                DW_AT_decl_file	("$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+                DW_AT_decl_line	(233)
+                DW_AT_data_member_location	(0x0348)
+
+0x00009fc6:   DW_TAG_member
+                DW_AT_name	("last_sync_func")
+                DW_AT_type	(0x000007de "u32")
+                DW_AT_decl_file	("$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+                DW_AT_decl_line	(234)
+                DW_AT_data_member_location	(0x034c)
+
+0x00009fd3:   DW_TAG_member
+                DW_AT_name	("gz_irq")
+                DW_AT_type	(0x000007de "u32")
+                DW_AT_decl_file	("$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+                DW_AT_decl_line	(235)
+                DW_AT_data_member_location	(0x0350)
+
+0x00009fe0:   DW_TAG_member
+                DW_AT_name	("is_upload")
+                DW_AT_type	(0x000007de "u32")
+                DW_AT_decl_file	("$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+                DW_AT_decl_line	(236)
+                DW_AT_data_member_location	(0x0354)
+
+0x00009fed:   DW_TAG_member
+                DW_AT_name	("upload_reason")
+                DW_AT_type	(0x000007de "u32")
+                DW_AT_decl_file	("$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+                DW_AT_decl_line	(237)
+                DW_AT_data_member_location	(0x0358)
+
+0x00009ffa:   DW_TAG_member
+                DW_AT_name	("is_power_reset")
+                DW_AT_type	(0x000007de "u32")
+                DW_AT_decl_file	("$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+                DW_AT_decl_line	(238)
+                DW_AT_data_member_location	(0x035c)
+
+0x0000a007:   DW_TAG_member
+                DW_AT_name	("power_reset_reason")
+                DW_AT_type	(0x000007de "u32")
+                DW_AT_decl_file	("$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+                DW_AT_decl_line	(239)
+                DW_AT_data_member_location	(0x0360)
+
+0x0000a014:   DW_TAG_member
+                DW_AT_name	("mcupm_skip")
+                DW_AT_type	(0x000007de "u32")
+                DW_AT_decl_file	("$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+                DW_AT_decl_line	(240)
+                DW_AT_data_member_location	(0x0364)
+
+0x0000a021:   DW_TAG_member
+                DW_AT_name	("panic_str")
+                DW_AT_type	(0x0000a048 "char[256]")
+                DW_AT_decl_file	("$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+                DW_AT_decl_line	(241)
+                DW_AT_data_member_location	(0x0368)
+
+0x0000a02e:   NULL

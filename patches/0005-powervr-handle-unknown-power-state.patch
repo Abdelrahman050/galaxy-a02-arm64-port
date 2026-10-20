@@ -1,0 +1,27 @@
+--- a/drivers/misc/mediatek/gpu/gpu_rgx/m1.13ED5776728/services/system/rogue/rgx_mtk/mt6739/mtk_mfgsys.c
++++ b/drivers/misc/mediatek/gpu/gpu_rgx/m1.13ED5776728/services/system/rogue/rgx_mtk/mt6739/mtk_mfgsys.c
+@@ -405,7 +405,11 @@
+ 		unsigned int ui32CurFreqID;
+ 		PVRSRV_DEV_POWER_STATE ePowerState;
+ 
+-		PVRSRVGetDevicePowerState(psDevNode, &ePowerState);
++		if (PVRSRVGetDevicePowerState(psDevNode, &ePowerState) != PVRSRV_OK) {
++			if (eResult == PVRSRV_OK)
++				PVRSRVDevicePostClockSpeedChange(psDevNode, bIdleDevice, (void *)NULL);
++			return IMG_FALSE;
++		}
+ 		if (ePowerState != PVRSRV_DEV_POWER_STATE_ON)
+ 			MTKEnableMfgClock(IMG_FALSE);
+ 
+@@ -617,7 +621,10 @@
+ 	if (PVRSRVPowerLock() != PVRSRV_OK)
+ 		return 0;
+ 
+-	PVRSRVGetDevicePowerState(psDevNode, &ePowerState);
++	if (PVRSRVGetDevicePowerState(psDevNode, &ePowerState) != PVRSRV_OK) {
++		PVRSRVPowerUnlock();
++		return 0;
++	}
+ 	if (ePowerState != PVRSRV_DEV_POWER_STATE_ON) {
+ 		PVRSRVPowerUnlock();
+ 		return 0;

@@ -1,0 +1,247 @@
+--- a/drivers/misc/mediatek/ram_console/mtk_ram_console.c
++++ b/drivers/misc/mediatek/ram_console/mtk_ram_console.c
+@@ -214,6 +214,41 @@
+ };
+ #endif
+ 
++#if defined(CONFIG_ARM64) && !defined(CONFIG_SEC_DEBUG)
++/* The stock ARM32 reason record occupies 0x468 bytes; its console starts
++ * 0x480 bytes after off_linux. Preserve that console boundary while keeping
++ * native unsigned long fields 64-bit in the new ARM64 reason record.
++ */
++#define A02_REASON_AREA_BYTES 0x480
++#define A02_REASON_MAGIC 0x41303236
++#define A02_REASON_VERSION 1
++#define A02_NATIVE_TAG_OFFSET ALIGN(sizeof(struct last_reboot_reason), 64)
++
++struct last_reboot_reason_legacy_tail {
++	u8 common[828];
++	u32 last_init_func;
++	u8 pmic_ext_buck;
++	u8 padding[3];
++	u32 hang_detect_timeout_count;
++	u32 last_async_func;
++	u32 last_sync_func;
++	u32 gz_irq;
++	u32 is_upload;
++	u32 upload_reason;
++	u32 is_power_reset;
++	u32 power_reset_reason;
++	u32 mcupm_skip;
++	char panic_str[256];
++};
++
++struct a02_reason_format_tag {
++	u32 magic;
++	u32 inverse_magic;
++	u32 version;
++	u32 native_reason_size;
++};
++#endif
++
+ struct reboot_reason_pl {
+ 	u32 wdt_status;
+ 	u32 data[0];
+@@ -254,6 +289,10 @@
+ struct ram_console_buffer *ram_console_buffer;
+ #endif
+ static struct ram_console_buffer *ram_console_old;
++#if defined(CONFIG_ARM64) && !defined(CONFIG_SEC_DEBUG)
++static bool ram_console_old_reason_valid;
++static bool ram_console_old_reason_is_legacy;
++#endif
+ static struct ram_console_buffer *ram_console_buffer_pa;
+ 
+ static DEFINE_SPINLOCK(ram_console_lock);
+@@ -288,6 +327,46 @@
+ #undef memcpy
+ #endif
+ #define memcpy _memcpy
++#endif
++
++#if defined(CONFIG_ARM64) && !defined(CONFIG_SEC_DEBUG)
++static bool ram_console_reason_layout_valid(const struct ram_console_buffer *buffer)
++{
++	if (!buffer || !ram_console_buffer ||
++	    buffer->sz_buffer != ram_console_buffer->sz_buffer ||
++	    buffer->off_linux < sizeof(*buffer) ||
++	    buffer->off_linux > buffer->sz_buffer ||
++	    buffer->off_console > buffer->sz_buffer ||
++	    buffer->off_console < buffer->off_linux ||
++	    buffer->off_console - buffer->off_linux != A02_REASON_AREA_BYTES ||
++	    buffer->sz_console != buffer->sz_buffer - buffer->off_console)
++		return false;
++	return true;
++}
++
++static bool ram_console_reason_is_native_arm64(const struct ram_console_buffer *buffer)
++{
++	const struct a02_reason_format_tag *tag;
++
++	if (!ram_console_reason_layout_valid(buffer))
++		return false;
++	tag = (const void *)buffer + buffer->off_linux + A02_NATIVE_TAG_OFFSET;
++	return tag->magic == A02_REASON_MAGIC &&
++	       tag->inverse_magic == ~A02_REASON_MAGIC &&
++	       tag->version == A02_REASON_VERSION &&
++	       tag->native_reason_size == sizeof(struct last_reboot_reason);
++}
++
++static void ram_console_mark_native_arm64(struct ram_console_buffer *buffer)
++{
++	struct a02_reason_format_tag *tag =
++		(void *)buffer + buffer->off_linux + A02_NATIVE_TAG_OFFSET;
++
++	tag->magic = A02_REASON_MAGIC;
++	tag->inverse_magic = ~A02_REASON_MAGIC;
++	tag->version = A02_REASON_VERSION;
++	tag->native_reason_size = sizeof(struct last_reboot_reason);
++}
+ #endif
+ 
+ #define LAST_RR_SEC_VAL(header, sect, type, item) \
+@@ -297,9 +376,25 @@
+ 	LAST_RR_SEC_VAL(buf, linux, struct last_reboot_reason, rr_item)
+ #define LAST_RRPL_BUF_VAL(buf, rr_item)	\
+ 	LAST_RR_SEC_VAL(buf, pl, struct reboot_reason_pl, rr_item)
+-#define LAST_RRR_VAL(rr_item)	\
++#if defined(CONFIG_ARM64) && !defined(CONFIG_SEC_DEBUG)
++/* Common fields have the same offset in stock ARM32 and native ARM64.
++ * The six tail fields with changed offsets use LAST_RRR_TAIL_VAL below.
++ */
++#define LAST_RRR_VAL(rr_item) \
++	(ram_console_old_reason_valid ? \
++	 ((struct last_reboot_reason *)((void *)ram_console_old + \
++					ram_console_old->off_linux))->rr_item : 0)
++#define LAST_RRR_TAIL_VAL(rr_item) \
++	(ram_console_old_reason_is_legacy ? \
++	 ((struct last_reboot_reason_legacy_tail *)((void *)ram_console_old + \
++					ram_console_old->off_linux))->rr_item : \
++	 LAST_RRR_VAL(rr_item))
++#else
++#define LAST_RRR_VAL(rr_item) \
+ 	LAST_RR_SEC_VAL(ram_console_old, linux, struct last_reboot_reason, \
+ 			rr_item)
++#define LAST_RRR_TAIL_VAL(rr_item) LAST_RRR_VAL(rr_item)
++#endif
+ #define LAST_RRPL_VAL(rr_item)	\
+ 	LAST_RR_SEC_VAL(ram_console_old, pl, struct reboot_reason_pl, rr_item)
+ 
+@@ -521,8 +616,12 @@
+ 	pstore_console_show(PSTORE_TYPE_CONSOLE, m, v);
+ #else
+ 	if (buffer->off_console != 0
++#if defined(CONFIG_ARM64) && !defined(CONFIG_SEC_DEBUG)
++	    && ram_console_reason_layout_valid(buffer)
++#else
+ 	    && buffer->off_linux + ALIGN(sizeof(struct last_reboot_reason),
+ 					 64) == buffer->off_console
++#endif
+ 	    && buffer->sz_console == buffer->sz_buffer - buffer->off_console
+ 	    && buffer->log_size <= buffer->sz_console
+ 	    && buffer->log_start <= buffer->sz_console) {
+@@ -546,7 +645,7 @@
+ 		pr_notice("ram_console: no valid data\n");
+ 	else {
+ 		pr_notice("pmic & external buck: 0x%x\n",
+-				LAST_RRR_VAL(pmic_ext_buck));
++				LAST_RRR_TAIL_VAL(pmic_ext_buck));
+ 		pr_notice("ram_console: CPU notifier status: %d, %d, 0x%llx, %llu\n",
+ 				LAST_RRR_VAL(hotplug_cpu_event),
+ 				LAST_RRR_VAL(hotplug_cb_index),
+@@ -558,7 +657,7 @@
+ 				LAST_RRR_VAL(hps_cb_footprint),
+ 				LAST_RRR_VAL(hps_cb_fp_times));
+ 		pr_notice("ram_console: last init function: 0x%lx\n",
+-				LAST_RRR_VAL(last_init_func));
++				LAST_RRR_TAIL_VAL(last_init_func));
+ 	}
+ }
+ 
+@@ -571,6 +670,13 @@
+ 		return -1;
+ 	}
+ 	memcpy(ram_console_old, buffer, buffer_size);
++#if defined(CONFIG_ARM64) && !defined(CONFIG_SEC_DEBUG)
++	ram_console_old_reason_valid =
++		ram_console_reason_layout_valid(ram_console_old);
++	ram_console_old_reason_is_legacy =
++		ram_console_old_reason_valid &&
++		!ram_console_reason_is_native_arm64(ram_console_old);
++#endif
+ 	aee_rr_show_in_log();
+ 	return 0;
+ }
+@@ -597,13 +703,29 @@
+ 		/* OTA:leave enough space for pl/lk */
+ 		buffer->off_linux = 512;
+ 	buffer->sz_buffer = buffer_size;
++#if defined(CONFIG_ARM64) && !defined(CONFIG_SEC_DEBUG)
++	BUILD_BUG_ON(sizeof(struct last_reboot_reason_legacy_tail) != 0x468);
++	BUILD_BUG_ON(offsetof(struct last_reboot_reason_legacy_tail, last_init_func) != 828);
++	BUILD_BUG_ON(offsetof(struct last_reboot_reason_legacy_tail, gz_irq) != 848);
++	BUILD_BUG_ON(offsetof(struct last_reboot_reason_legacy_tail, panic_str) != 872);
++	BUILD_BUG_ON(A02_NATIVE_TAG_OFFSET + sizeof(struct a02_reason_format_tag) >
++		     A02_REASON_AREA_BYTES);
++	if (buffer->off_linux > buffer_size ||
++	    buffer_size - buffer->off_linux <= A02_REASON_AREA_BYTES)
++		return -EINVAL;
++	buffer->off_console = buffer->off_linux + A02_REASON_AREA_BYTES;
++#else
+ 	buffer->off_console = buffer->off_linux +
+ 		ALIGN(sizeof(struct last_reboot_reason), 64);
++#endif
+ 	buffer->sz_console = buffer->sz_buffer - buffer->off_console;
+ 	memset_io(&buffer->log_start, 0, 2*sizeof(uint32_t));
+ 	memset_io((void *)buffer + buffer->off_linux, 0,
+ 			buffer_size - buffer->off_linux);
+ 	ram_console_init_desc(buffer->off_linux);
++#if defined(CONFIG_ARM64) && !defined(CONFIG_SEC_DEBUG)
++	ram_console_mark_native_arm64(buffer);
++#endif
+ #ifndef CONFIG_PSTORE
+ 	register_console(&ram_console);
+ #endif
+@@ -3315,36 +3437,36 @@
+ void aee_rr_show_last_init_func(struct seq_file *m)
+ {
+ 	seq_printf(m, "last init function: 0x%lx\n",
+-			LAST_RRR_VAL(last_init_func));
++			LAST_RRR_TAIL_VAL(last_init_func));
+ }
+ 
+ void aee_rr_show_last_sync_func(struct seq_file *m)
+ {
+ 	seq_printf(m, "last sync function: 0x%lx\n",
+-			LAST_RRR_VAL(last_sync_func));
++			LAST_RRR_TAIL_VAL(last_sync_func));
+ }
+ 
+ void aee_rr_show_last_async_func(struct seq_file *m)
+ {
+ 	seq_printf(m, "last async function: 0x%lx\n",
+-			LAST_RRR_VAL(last_async_func));
++			LAST_RRR_TAIL_VAL(last_async_func));
+ }
+ 
+ void aee_rr_show_pmic_ext_buck(struct seq_file *m)
+ {
+ 	seq_printf(m, "pmic & external buck: 0x%x\n",
+-			LAST_RRR_VAL(pmic_ext_buck));
++			LAST_RRR_TAIL_VAL(pmic_ext_buck));
+ }
+ 
+ void aee_rr_show_hang_detect_timeout_count(struct seq_file *m)
+ {
+ 	seq_printf(m, "hang detect time out: 0x%x\n",
+-			LAST_RRR_VAL(hang_detect_timeout_count));
++			LAST_RRR_TAIL_VAL(hang_detect_timeout_count));
+ }
+ 
+ void aee_rr_show_gz_irq(struct seq_file *m)
+ {
+-	seq_printf(m, "GZ IRQ: 0x%x\n", LAST_RRR_VAL(gz_irq));
++	seq_printf(m, "GZ IRQ: 0x%x\n", LAST_RRR_TAIL_VAL(gz_irq));
+ }
+ 
+ void aee_rr_show_drcc_dbg_info(struct seq_file *m)

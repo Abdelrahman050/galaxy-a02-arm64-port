@@ -1,0 +1,49 @@
+{
+  "schema": "sm-a022f-pmu-source-replacement-equivalence.v1",
+  "generated_utc_date": "2026-10-20",
+  "source_archive_sha256": "0e16a5dce007a91f6215a194c534cb9cf84fcf8fff021609cc47f344cfcc1f27",
+  "source_based_stock_dts_sha256": "be2a5934175f25214408b95330383c9915c3834a1caf8386ecf04619dd61dde4",
+  "selectively_extracted_dts_dtsi_input_count": 21,
+  "firmware_derived_patch_sha256_local_only": "ad5ea2c72b1bd9ab3a3f7dddd236ba954f6d8003e6d4d081f8e762c4ec03749b",
+  "comparison_tool": "scripts/fdt_diff.py",
+  "allowed_property": [
+    "/pmu:compatible"
+  ],
+  "fresh_source_dtb_compilation_in_this_recheck": false,
+  "revisions": {
+    "r00": {
+      "reference_sha256": "14e8e1911588f8253400d3adaa6e4a62abd001d2cfe509ab6ad24cb25ec8138e",
+      "source_candidate_sha256": "14e8e1911588f8253400d3adaa6e4a62abd001d2cfe509ab6ad24cb25ec8138e",
+      "status": "PASS",
+      "missing_nodes": 0,
+      "extra_nodes": 0,
+      "missing_properties": 0,
+      "extra_properties": 0,
+      "changed_properties": [],
+      "reservation_map_equal": true
+    },
+    "r01": {
+      "reference_sha256": "b6898e3d24f7fcb7b9d27a0f3148dfce0e2cedbe51d4f781d54fadadcb0fb79c",
+      "source_candidate_sha256": "b6898e3d24f7fcb7b9d27a0f3148dfce0e2cedbe51d4f781d54fadadcb0fb79c",
+      "status": "PASS",
+      "missing_nodes": 0,
+      "extra_nodes": 0,
+      "missing_properties": 0,
+      "extra_properties": 0,
+      "changed_properties": [],
+      "reservation_map_equal": true
+    },
+    "r06": {
+      "reference_sha256": "b6898e3d24f7fcb7b9d27a0f3148dfce0e2cedbe51d4f781d54fadadcb0fb79c",
+      "source_candidate_sha256": "b6898e3d24f7fcb7b9d27a0f3148dfce0e2cedbe51d4f781d54fadadcb0fb79c",
+      "status": "PASS",
+      "missing_nodes": 0,
+      "extra_nodes": 0,
+      "missing_properties": 0,
+      "extra_properties": 0,
+      "changed_properties": [],
+      "reservation_map_equal": true
+    }
+  },
+  "scope": "Saved DTB outputs compared structurally only. This record does not establish LK acceptance, driver compatibility, device boot, or runtime behavior."
+}

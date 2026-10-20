@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.md text eol=lf
+*.patch text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.config text eol=lf
+patches/** whitespace=-space-before-tab,-trailing-space,-blank-at-eof
+*.csv text eol=lf
+*.json text eol=lf

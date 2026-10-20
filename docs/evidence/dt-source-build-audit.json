@@ -1,0 +1,68 @@
+{
+  "description": "ARM32 Samsung MT6739 source base copied to ARM64 staging; PMU compatible changed only",
+  "base_vs_official": {
+    "left_nodes": 426,
+    "right_nodes": 426,
+    "left_properties": 1778,
+    "right_properties": 1778,
+    "memreserve_equal": true,
+    "missing_nodes": [],
+    "extra_nodes": [],
+    "changed_properties": [
+      "/pmu:compatible"
+    ]
+  },
+  "revisions": {
+    "r00": {
+      "source_overlay_sha256": "a4ef2a81cf0252909cced18e03979a5b332a7cc82b296710bfef89b25302af20",
+      "official_overlay_sha256": "a4ef2a81cf0252909cced18e03979a5b332a7cc82b296710bfef89b25302af20",
+      "overlay_byte_equal": true,
+      "merged_vs_official": {
+        "left_nodes": 738,
+        "right_nodes": 738,
+        "left_properties": 3346,
+        "right_properties": 3346,
+        "memreserve_equal": true,
+        "missing_nodes": [],
+        "extra_nodes": [],
+        "changed_properties": [
+          "/pmu:compatible"
+        ]
+      }
+    },
+    "r01": {
+      "source_overlay_sha256": "62c5eca693a60718f0e0ead7bcf355bf4fbb22788b7dcdc9030c477a1683ad4e",
+      "official_overlay_sha256": "62c5eca693a60718f0e0ead7bcf355bf4fbb22788b7dcdc9030c477a1683ad4e",
+      "overlay_byte_equal": true,
+      "merged_vs_official": {
+        "left_nodes": 737,
+        "right_nodes": 737,
+        "left_properties": 3341,
+        "right_properties": 3341,
+        "memreserve_equal": true,
+        "missing_nodes": [],
+        "extra_nodes": [],
+        "changed_properties": [
+          "/pmu:compatible"
+        ]
+      }
+    },
+    "r06": {
+      "source_overlay_sha256": "3cb04d9c751d52ae6ef999b86b919778ad1bac3aa4ffade8d932e5890b3ec387",
+      "official_overlay_sha256": "3cb04d9c751d52ae6ef999b86b919778ad1bac3aa4ffade8d932e5890b3ec387",
+      "overlay_byte_equal": true,
+      "merged_vs_official": {
+        "left_nodes": 737,
+        "right_nodes": 737,
+        "left_properties": 3341,
+        "right_properties": 3341,
+        "memreserve_equal": true,
+        "missing_nodes": [],
+        "extra_nodes": [],
+        "changed_properties": [
+          "/pmu:compatible"
+        ]
+      }
+    }
+  }
+}

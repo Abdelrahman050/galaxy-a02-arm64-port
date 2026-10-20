@@ -1,0 +1,11 @@
+--- a/include/linux/sec_debug.h
++++ b/include/linux/sec_debug.h
+@@ -372,7 +372,7 @@
+ 	void		(*func_hook_logger)(const char*, size_t);
+ } __attribute__((__packed__)) sec_logger;
+ 
+-#if defined (CONFIG_MACH_MT6739)
++#if defined(CONFIG_MACH_MT6739) && !defined(CONFIG_ARM64)
+ typedef struct {
+ 	/* COMMON */
+ 	unsigned int r0;

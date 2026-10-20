@@ -1,0 +1,7 @@
+Files <SOURCE_ROOT>/kernel-source/drivers/misc/mediatek/eccci/fsm/Makefile and <SOURCE_ROOT>/kernel-source-arm64-exp/drivers/misc/mediatek/eccci/fsm/Makefile differ
+Files <SOURCE_ROOT>/kernel-source/drivers/misc/mediatek/gpu/gpu_rgx/m1.13ED5776728/services/system/rogue/rgx_mtk/mt6739/mtk_mfgsys.c and <SOURCE_ROOT>/kernel-source-arm64-exp/drivers/misc/mediatek/gpu/gpu_rgx/m1.13ED5776728/services/system/rogue/rgx_mtk/mt6739/mtk_mfgsys.c differ
+Files <SOURCE_ROOT>/kernel-source/drivers/misc/mediatek/ram_console/mtk_ram_console.c and <SOURCE_ROOT>/kernel-source-arm64-exp/drivers/misc/mediatek/ram_console/mtk_ram_console.c differ
+Only in <SOURCE_ROOT>/kernel-source-arm64-exp/drivers/misc/mediatek/ram_console: mtk_ram_console.c.orig
+Files <SOURCE_ROOT>/kernel-source/fs/pstore/ram_core.c and <SOURCE_ROOT>/kernel-source-arm64-exp/fs/pstore/ram_core.c differ
+Only in <SOURCE_ROOT>/kernel-source: out
+Only in <SOURCE_ROOT>/kernel-source: out-arm64

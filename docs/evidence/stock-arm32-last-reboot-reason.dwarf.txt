@@ -1,0 +1,19 @@
+<SOURCE_ROOT>/kernel-source/out/vmlinux:	file format ELF32-arm-little
+
+0x0484e17d: DW_TAG_structure_type
+              DW_AT_name	("last_reboot_reason")
+              DW_AT_byte_size	(0x0468)
+              DW_AT_decl_file	("<SOURCE_ROOT>/kernel-source/out/../include/linux/sec_debug.h")
+              DW_AT_decl_line	(63)
+
+0x067a2597: DW_TAG_structure_type
+              DW_AT_name	("last_reboot_reason")
+              DW_AT_byte_size	(0x0468)
+              DW_AT_decl_file	("<SOURCE_ROOT>/kernel-source/out/../include/linux/sec_debug.h")
+              DW_AT_decl_line	(63)
+
+0x067dae26: DW_TAG_structure_type
+              DW_AT_name	("last_reboot_reason")
+              DW_AT_byte_size	(0x0468)
+              DW_AT_decl_file	("<SOURCE_ROOT>/kernel-source/out/../include/linux/sec_debug.h")
+              DW_AT_decl_line	(63)

@@ -1,0 +1,11 @@
+--- a/drivers/misc/mediatek/eccci/fsm/Makefile
++++ b/drivers/misc/mediatek/eccci/fsm/Makefile
+@@ -19,7 +19,7 @@
+ ccflags-y += -I$(srctree)/drivers/misc/mediatek/eccci/$(MTK_PLATFORM)
+ ccflags-y += -I$(srctree)/drivers/misc/mediatek/scp/$(MTK_PLATFORM)
+ 
+-ifeq ($(MTK_PLATFORM), "mt6739")
++ifeq ($(MTK_PLATFORM), mt6739)
+ ccflags-y += -I$(srctree)/drivers/misc/mediatek/debug_latch/lastbus/$(MTK_PLATFORM)
+ endif
+ 

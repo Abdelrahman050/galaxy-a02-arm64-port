@@ -1,0 +1,11 @@
+--- a/drivers/misc/mediatek/ram_console/mtk_ram_console.c
++++ b/drivers/misc/mediatek/ram_console/mtk_ram_console.c
+@@ -251,7 +251,7 @@
+ #ifdef CONFIG_SEC_DEBUG
+ struct ram_console_buffer *ram_console_buffer;
+ #else
+-static struct ram_console_buffer *ram_console_buffer;
++struct ram_console_buffer *ram_console_buffer;
+ #endif
+ static struct ram_console_buffer *ram_console_old;
+ static struct ram_console_buffer *ram_console_buffer_pa;

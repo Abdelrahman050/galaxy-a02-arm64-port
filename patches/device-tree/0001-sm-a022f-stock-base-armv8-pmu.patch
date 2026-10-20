@@ -1,0 +1,11 @@
+--- a/arch/arm64/boot/dts/mediatek/mt6739-sm-a022f-stock.dts
++++ b/arch/arm64/boot/dts/mediatek/mt6739-sm-a022f-stock.dts
+@@ -41,7 +41,7 @@
+ 
+ 
+ 	pmu {
+-		compatible = "arm,cortex-a7-pmu";
++		compatible = "arm,armv8-pmuv3";
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+ 	};

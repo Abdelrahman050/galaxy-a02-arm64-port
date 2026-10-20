@@ -1,0 +1,28 @@
+name: Read-only repository checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out source without persisting credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Verify repository contents and SHA-256 manifest
+        run: python3 scripts/repo_audit.py
+
+      - name: Check Python syntax without generating bytecode
+        run: python3 -B scripts/check_python_syntax.py
+
+      - name: Run synthetic repository audit tests
+        run: python3 -B -m unittest discover -s tests -v

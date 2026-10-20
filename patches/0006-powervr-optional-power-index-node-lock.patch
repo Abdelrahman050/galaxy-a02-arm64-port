@@ -1,0 +1,46 @@
+--- a/drivers/misc/mediatek/gpu/gpu_rgx/m1.13ED5776728/services/system/rogue/rgx_mtk/mt6739/mtk_mfgsys.c
++++ b/drivers/misc/mediatek/gpu/gpu_rgx/m1.13ED5776728/services/system/rogue/rgx_mtk/mt6739/mtk_mfgsys.c
+@@ -618,15 +618,15 @@
+ 	if (!psDevNode)
+ 		return 0;
+ 
+-	if (PVRSRVPowerLock() != PVRSRV_OK)
++	if (PVRSRVPowerLock(psDevNode) != PVRSRV_OK)
+ 		return 0;
+ 
+ 	if (PVRSRVGetDevicePowerState(psDevNode, &ePowerState) != PVRSRV_OK) {
+-		PVRSRVPowerUnlock();
++		PVRSRVPowerUnlock(psDevNode);
+ 		return 0;
+ 	}
+ 	if (ePowerState != PVRSRV_DEV_POWER_STATE_ON) {
+-		PVRSRVPowerUnlock();
++		PVRSRVPowerUnlock(psDevNode);
+ 		return 0;
+ 	}
+ 
+@@ -647,7 +647,7 @@
+ 	/* writes 0 to GPIO_INPUT_REQ, bit[0] */
+ 	DRV_WriteReg32(pvGPIO_REG, DRV_Reg32(pvGPIO_REG) & (~0x1));
+ 	if (bTimeout) {
+-		PVRSRVPowerUnlock();
++		PVRSRVPowerUnlock(psDevNode);
+ 		return 0;
+ 	}
+ 
+@@ -674,13 +674,13 @@
+ 	/* writes 0 to GPIO_OUTPUT_ACK, bit[17] */
+ 	DRV_WriteReg32(pvGPIO_REG, DRV_Reg32(pvGPIO_REG) & (~0x20000));
+ 	if (bTimeout) {
+-		PVRSRVPowerUnlock();
++		PVRSRVPowerUnlock(psDevNode);
+ 		return 0;
+ 	}
+ 
+ 	MTKReStartPowerIndex();
+ 
+-	PVRSRVPowerUnlock();
++	PVRSRVPowerUnlock(psDevNode);
+ 
+ 	return (ui32State == 1) ? ui32Result : 0;
+ }

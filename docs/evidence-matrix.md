@@ -1,0 +1,43 @@
+# Evidence matrix
+
+Status meanings: **PASS** means demonstrated offline for the precisely named condition; **FAIL** means the current artifact does not meet it; **UNVERIFIED** means evidence is insufficient or a device test is needed. None of the offline PASS results imply that Android ARM64 boots.
+
+| Condition | Status | Evidence and boundary |
+| --- | --- | --- |
+| Initial kernel artifact is AArch64 ELF/Image | PASS | Phase-one `Image`, `vmlinux`, `System.map`, `.config`, and SHA-256 manifest. |
+| `CONFIG_COMPAT` and core MT6739 options selected | PASS | Saved final `.config` includes `ARM64`, `COMPAT`, `MACH_MT6739`, pinctrl, watchdog common/v2. Runtime remains unverified. |
+| Independent clean build produces AArch64 artifacts | PASS | A separate fresh-output `make Image` exited 0 in 16m33s; `.config` and `System.map` hashes match the first build. `Image`/`vmlinux` hashes differ, so byte-for-byte reproducibility is not claimed. |
+| Samsung ARM32 debug feature parity | FAIL | ARM32 baseline enables `SEC_DEBUG`; experimental ARM64 config leaves it disabled. MT6739 guards in Samsung debug code select ARM32 assembly even for ARM64, and extra-info reservation needs verification. |
+| Stock RAM-console persistent-memory layout matches ARM64 build | FAIL | DWARF sizes: stock `last_reboot_reason` is 1,128 bytes; current ARM64 fallback is 872 bytes, shifting `off_console` 256 bytes. Existing logs/reboot reasons may be read incorrectly. |
+| Isolated RAM-console compatibility candidate compiles | PASS (object only) | Candidate patch 0008 preserves the stock `0x480` console boundary and compiled `mtk_ram_console.o` as ELF64/AArch64; 139 common offsets and a synthetic legacy/native model passed. No full Image, real reboot record or runtime reader check. |
+| RAM-console compatibility on the phone | UNVERIFIED | LK/TEE/AEE readers, real stock crash record, reserved-memory ownership and ARM64 tag acceptance have not been tested. Candidate patch 0008 is excluded from the built Image. |
+| Initial kernel PowerVR DVFS pointer safety | FAIL | The first/clean GPU path passes 32-bit device indices to functions expecting device-node pointers at four compiled callsites. |
+| Isolated PowerVR correction builds | PASS | Patches 0004–0006 rebuilt and linked; four pointer-conversion warnings disappeared. Patch 0007 fixed a separate unchecked power-state path and rebuilt in a fourth output. Runtime DVFS safety remains UNVERIFIED. |
+| A02 FDT retains official board properties | PASS | Isolated candidate compared property-by-property with official merged FDT; see boot report. This is a structural comparison only. |
+| A02 r00 overlay rebuilds from Samsung source | PASS | Staged ARM64 A02/K39 source with DTC 1.7.2 produced a DTBO byte-for-byte identical to official r00. |
+| Source-built A02 ARM64 FDT matches official hardware layout | PASS | Samsung stock MT6739 base plus K39/A02 overlays reproduced r00/r01/r06 merged trees with all nodes, property bytes and memreserve entries equal except `/pmu:compatible`; all DTBOs byte-identical. Independent reproduction matched output hashes. This is an external staged build, not an in-tree kernel target. |
+| Generic ARM64 MT6739 base is A02-equivalent | FAIL | After resolving the sole missing `soc_codec` label, the source merge still has 719 nodes vs 738 official and lacks modem/SEC reservations, `/teegris`, and stock bootargs. |
+| Stock boot header can directly load the new `Image` at its required alignment | FAIL | Stock `kernel_addr=0x40008000` has `0x8000` modulo 2 MiB; the AArch64 header requires `text_offset=0x80000`. LK relocation is unverified. |
+| Raw AArch64 `Image` fits the stock boot partition | FAIL | Official PIT boot entry: `0xC000` sectors × 512 bytes = 24 MiB; raw `Image` is 28,323,856 bytes before ramdisk/headers. |
+| Gzip-compressed `Image` fits by byte count | PASS | Offline gzip artifact is 11,760,269 bytes and passes integrity check. LK support for this exact packaging and decompressed memory footprint is unverified. |
+| Complete unsigned v2 boot layout fits the partition | PASS | A reproduced offline layout with the **clean** Image.gz, 845-byte AArch64 initramfs and correctly wrapped DT table is 11,878,400 bytes, 13,287,424 below PIT capacity. It is not device-ready. |
+| Source-built base FDT fits stock-style boot layout | PASS (offline) | A second unsigned layout uses the official-equivalent source-built **base** FDT instead of premerged r00: 11,814,912 bytes, 13,350,912-byte PIT margin, reproduced hashes. Actual LK DTBO application and board selection remain unverified. |
+| Stock boot AVB header has verification-disable flags clear | PASS | Offline parsing found SHA256_RSA4096 metadata, a 512-byte signature field, flags 0 and rollback index 0. These are header declarations; signature validity and device policy are UNVERIFIED. |
+| Offline layout carries Samsung/AVB authorization | FAIL | The local prototype intentionally lacks the stock Samsung signer trailer and AVB metadata; secure-boot acceptance is unverified. It was not flashed. |
+| LK has adequate space for the full AArch64 kernel footprint | UNVERIFIED | Image header declares 33,325,056 bytes of effective memory footprint, larger than its 28,323,856-byte file. The actual Samsung LK memory map and relocation behavior are not established. |
+| Samsung LK contains a compiled K64 SMC handoff path | PASS (static) | Thumb2 callsites at `0x302e0/0x302fc` lead to a routine that BLX-es into ARM code and executes `smc #0` with ID `0x82000115`; a separate path checks 512 KiB address alignment. Reachability on this phone is not proven. |
+| SM-A022F LK enters AArch64 kernel correctly | UNVERIFIED | The compiled path's runtime branch condition, final target, FDT and CPU state, monitor acceptance and boot policy are not established. |
+| Device boot policy accepts a development boot image | UNVERIFIED | The stock ROM is signed; offline firmware and LK strings do not establish the phone's unlock/AVB state or acceptance of a custom image. No image was submitted to the phone. |
+| Boot DT selection avoids reapplying a stock overlay | UNVERIFIED | The newer offline layout carries only the source-built base FDT, which follows the stock boot section shape. LK's actual DTBO behavior and this phone's hardware revision remain unknown. |
+| Static AArch64 initramfs artifact is well formed | PASS | `boot-probe` ELF64/AArch64 has no dynamic interpreter; `newc` archive has `/init` and `/dev/console`. |
+| Probe reaches PID 1 on the phone | UNVERIFIED | No on-device test or flash performed. |
+| Stock Android supports `arm64-v8a` apps | FAIL | Firmware reports only `armeabi-v7a,armeabi`; no 64-bit linker/system/vendor library directories. |
+| Stock graphics stack supports ARM64 framework/apps | FAIL | Inspected mapper, gralloc, EGL/GLES, HWC, and Vulkan components are ELF32; mapper is passthrough. |
+| Stock Gralloc4 descriptor can be encoded by ARM64 code | PASS (wire format only) | Stock mapper imports AOSP `encodeBufferDescriptorInfo`; 32-bit allocator imports matching decoder. This establishes the public descriptor encoding path, not acceptance of a requested allocation. |
+| Stock PowerVR native-handle envelope size identified | PASS (static) | Direct ELF32 disassembly finds a 208-byte handle: 12-byte header, 49 payload slots, `version=12`, variable `numFds + numInts = 49`; import checks this sum. Private field meanings remain unknown. |
+| ARM64 mapper can import stock PowerVR buffer handles | UNVERIFIED | Public `native_handle_t` envelope is known, but private fd/int payload, metadata and `gralloc.rogue` import semantics are not. Stock HWC may require vendor metadata. |
+| Matching ARM64 PowerVR userspace stack identified | FAIL | Kernel and stock GLES both identify DDK `1.13@5776728`, but no provenance-verified MT6739/GE8100 Android 11 ARM64 library set was found. A software graphics bridge also remains unverified. |
+| 32-bit vendor HALs coexist with new 64-bit framework | UNVERIFIED | Binderized services are a plausible mixed-ABI path, subject to VINTF, VNDK, SELinux, and hardware tests. |
+| Complete Android ARM64 runs an `arm64-v8a` app | UNVERIFIED | A full userspace has not been built or booted. |
+
+The detailed reports and machine-readable hashes are linked from the project README.

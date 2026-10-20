@@ -1,0 +1,111 @@
+Start: 2026-10-19T12:52:58Z
+Source: $PROJECT_ROOT/kernel-source-arm64-ram-compat
+Output: $PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat
+Target: drivers/misc/mediatek/ram_console/mtk_ram_console.o
+Config before olddefconfig:
+cf28ea2d10ed44db355ef454ab9cc395b0ae2c82d870e396cba1bc8a197ef354  $PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/.config
+make: Entering directory '$PROJECT_ROOT/kernel-source-arm64-ram-compat'
+In file included from scripts/kconfig/zconf.tab.c:2470:
+In function ‘dep_stack_insert’,
+    inlined from ‘sym_check_print_recursive’ at ../scripts/kconfig/symbol.c:1123:3,
+    inlined from ‘sym_check_deps’ at ../scripts/kconfig/symbol.c:1300:3:
+../scripts/kconfig/symbol.c:1099:19: warning: storing the address of local variable ‘cv_stack’ in ‘check_top’ [-Wdangling-pointer=]
+ 1099 |         check_top = stack;
+      |         ~~~~~~~~~~^~~~~~~
+../scripts/kconfig/symbol.c: In function ‘sym_check_deps’:
+../scripts/kconfig/symbol.c:1120:26: note: ‘cv_stack’ declared here
+ 1120 |         struct dep_stack cv_stack;
+      |                          ^~~~~~~~
+../scripts/kconfig/symbol.c:1090:4: note: ‘check_top’ declared here
+ 1090 | } *check_top;
+      |    ^~~~~~~~~
+scripts/kconfig/conf -s --olddefconfig Kconfig
+drivers/misc/tzdev/Kconfig:1:warning: ignoring type redefinition of 'TZDEV' from 'boolean' to 'tristate'
+drivers/misc/tzdev/Kconfig:80:warning: ignoring type redefinition of 'ION_FD2PHYS' from 'tristate' to 'boolean'
+make: Leaving directory '$PROJECT_ROOT/kernel-source-arm64-ram-compat'
+Config after olddefconfig:
+cf28ea2d10ed44db355ef454ab9cc395b0ae2c82d870e396cba1bc8a197ef354  $PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/.config
+make: Entering directory '$PROJECT_ROOT/kernel-source-arm64-ram-compat'
+scripts/kconfig/conf -s --silentoldconfig Kconfig
+drivers/misc/tzdev/Kconfig:1:warning: ignoring type redefinition of 'TZDEV' from 'boolean' to 'tristate'
+drivers/misc/tzdev/Kconfig:80:warning: ignoring type redefinition of 'ION_FD2PHYS' from 'tristate' to 'boolean'
+../scripts/mod/modpost.c: In function ‘match’:
+../scripts/mod/modpost.c:811:30: warning: assignment discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+  811 |                         here = strstr(sym, bare);
+      |                              ^
+../scripts/extract-cert.c: In function ‘display_openssl_errors’:
+../scripts/extract-cert.c:46:9: warning: ‘ERR_get_error_line’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   46 |         while ((e = ERR_get_error_line(&file, &line))) {
+      |         ^~~~~
+In file included from ../scripts/extract-cert.c:23:
+/usr/include/openssl/err.h:426:15: note: declared here
+  426 | unsigned long ERR_get_error_line(const char **file, int *line);
+      |               ^~~~~~~~~~~~~~~~~~
+../scripts/extract-cert.c: In function ‘drain_openssl_errors’:
+../scripts/extract-cert.c:59:9: warning: ‘ERR_get_error_line’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   59 |         while (ERR_get_error_line(&file, &line)) {}
+      |         ^~~~~
+/usr/include/openssl/err.h:426:15: note: declared here
+  426 | unsigned long ERR_get_error_line(const char **file, int *line);
+      |               ^~~~~~~~~~~~~~~~~~
+../scripts/extract-cert.c: In function ‘main’:
+../scripts/extract-cert.c:124:17: warning: ‘ENGINE_load_builtin_engines’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  124 |                 ENGINE_load_builtin_engines();
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ../scripts/extract-cert.c:24:
+/usr/include/openssl/engine.h:358:28: note: declared here
+  358 | OSSL_DEPRECATEDIN_3_0 void ENGINE_load_builtin_engines(void);
+      |                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../scripts/extract-cert.c:126:17: warning: ‘ENGINE_by_id’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  126 |                 e = ENGINE_by_id("pkcs11");
+      |                 ^
+/usr/include/openssl/engine.h:336:31: note: declared here
+  336 | OSSL_DEPRECATEDIN_3_0 ENGINE *ENGINE_by_id(const char *id);
+      |                               ^~~~~~~~~~~~
+../scripts/extract-cert.c:128:17: warning: ‘ENGINE_init’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  128 |                 if (ENGINE_init(e))
+      |                 ^~
+/usr/include/openssl/engine.h:622:27: note: declared here
+  622 | OSSL_DEPRECATEDIN_3_0 int ENGINE_init(ENGINE *e);
+      |                           ^~~~~~~~~~~
+../scripts/extract-cert.c:133:25: warning: ‘ENGINE_ctrl_cmd_string’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  133 |                         ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0), "Set PKCS#11 PIN");
+      |                         ^~~
+/usr/include/openssl/engine.h:479:5: note: declared here
+  479 | int ENGINE_ctrl_cmd_string(ENGINE *e, const char *cmd_name, const char *arg,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+../scripts/extract-cert.c:134:17: warning: ‘ENGINE_ctrl_cmd’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+  134 |                 ENGINE_ctrl_cmd(e, "LOAD_CERT_CTRL", 0, &parms, NULL, 1);
+      |                 ^~~~~~~~~~~~~~~
+/usr/include/openssl/engine.h:450:27: note: declared here
+  450 | OSSL_DEPRECATEDIN_3_0 int ENGINE_ctrl_cmd(ENGINE *e, const char *cmd_name,
+      |                           ^~~~~~~~~~~~~~~
+make: Leaving directory '$PROJECT_ROOT/kernel-source-arm64-ram-compat'
+	Command being timed: "make -C $PROJECT_ROOT/kernel-source-arm64-ram-compat O=$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat ARCH=arm64 MTK_PLATFORM=mt6739 CC=$PROJECT_ROOT/prebuilts/clang/host/linux-x86/clang-r383902/bin/clang LD=$PROJECT_ROOT/prebuilts/clang/host/linux-x86/clang-r383902/bin/ld.lld CROSS_COMPILE=$PROJECT_ROOT/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin/aarch64-linux-android- CLANG_TRIPLE=aarch64-linux-gnu- -j4 drivers/misc/mediatek/ram_console/mtk_ram_console.o"
+	User time (seconds): 8.38
+	System time (seconds): 4.77
+	Percent of CPU this job got: 41%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:31.66
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 82392
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 67
+	Minor (reclaiming a frame) page faults: 1043460
+	Voluntary context switches: 239431
+	Involuntary context switches: 1824
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+RAM-compat object build exit status: 0
+End: 2026-10-19T12:53:35Z
+$PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/drivers/misc/mediatek/ram_console/mtk_ram_console.o: ELF 64-bit LSB relocatable, ARM aarch64, version 1 (SYSV), with debug_info, not stripped
+cf28ea2d10ed44db355ef454ab9cc395b0ae2c82d870e396cba1bc8a197ef354  $PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/.config
+424fdae7c978f76af2cb83f741b910cc8c668d64f3ad2c54e2e3e912c0275d78  $PROJECT_ROOT/kernel-source-arm64-ram-compat/out-arm64-ram-compat/drivers/misc/mediatek/ram_console/mtk_ram_console.o

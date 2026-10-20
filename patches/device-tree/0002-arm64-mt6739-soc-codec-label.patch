@@ -1,0 +1,11 @@
+--- a/arch/arm64/boot/dts/mediatek/mt6739.dts
++++ b/arch/arm64/boot/dts/mediatek/mt6739.dts
+@@ -1745,7 +1745,7 @@
+ 		compatible = "mediatek,mt_soc_pcm_hp_impedance";
+ 	};
+ 
+-	mt_soc_codec_name {
++	soc_codec: mt_soc_codec_name {
+ 		compatible = "mediatek,mt_soc_codec_63xx";
+ 		use_hp_depop_flow = <0>; /* select 1: use, 0: not use */
+ 		use_ul_260k = <0>; /* select 1: use, 0: not use */

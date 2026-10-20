@@ -1,0 +1,15 @@
+<SOURCE_ROOT>/kernel-source/out/vmlinux:	file format ELF32-arm-little
+
+0x0484d7f2: DW_TAG_variable
+              DW_AT_name	("ram_console_buffer")
+              DW_AT_type	(0x0484d803 "ram_console_buffer*")
+              DW_AT_external	(true)
+              DW_AT_decl_file	("<SOURCE_ROOT>/kernel-source/out/../drivers/misc/mediatek/ram_console/mtk_ram_console.c")
+              DW_AT_decl_line	(252)
+              DW_AT_location	(DW_OP_addr 0xc1c5eb9c)
+
+0x0484d808: DW_TAG_structure_type
+              DW_AT_name	("ram_console_buffer")
+              DW_AT_byte_size	(0x40)
+              DW_AT_decl_file	("<SOURCE_ROOT>/kernel-source/out/../include/linux/sec_debug.h")
+              DW_AT_decl_line	(39)

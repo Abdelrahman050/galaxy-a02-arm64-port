@@ -1,0 +1,131 @@
+{
+  "description": "Isolated Samsung DT source copy with one ARMv8 PMU adaptation",
+  "files": [
+    {
+      "origin": "arch/arm/boot/dts/mt6739.dts",
+      "staged": "src/arch/arm64/boot/dts/mediatek/mt6739-sm-a022f-stock.dts",
+      "origin_sha256": "e8fd8c8f7ce4569217aa06f13aac689ae7c6580d313b28acd7adfc03505db28b",
+      "staged_sha256": "be2a5934175f25214408b95330383c9915c3834a1caf8386ecf04619dd61dde4"
+    },
+    {
+      "origin": "arch/arm/boot/dts/cust_mt6739_msdc.dtsi",
+      "staged": "src/arch/arm64/boot/dts/mediatek/cust_mt6739_msdc.dtsi",
+      "origin_sha256": "9201acce439982a24be1bab89923d2243d74c7ec22ba33d8fa602a6be252a0de",
+      "staged_sha256": "9201acce439982a24be1bab89923d2243d74c7ec22ba33d8fa602a6be252a0de"
+    },
+    {
+      "origin": "arch/arm/boot/dts/trusty.dtsi",
+      "staged": "src/arch/arm64/boot/dts/mediatek/trusty.dtsi",
+      "origin_sha256": "bb84587cb86660318ed6da749793f5ccb67a952476d348344fb3953b4e387f23",
+      "staged_sha256": "bb84587cb86660318ed6da749793f5ccb67a952476d348344fb3953b4e387f23"
+    },
+    {
+      "origin": "arch/arm/boot/dts/mt6357.dtsi",
+      "staged": "src/arch/arm64/boot/dts/mediatek/mt6357.dtsi",
+      "origin_sha256": "6c879e3de8feb336ee09a351d8169e420c205e3f931a8d22351bf5b26145f440",
+      "staged_sha256": "6c879e3de8feb336ee09a351d8169e420c205e3f931a8d22351bf5b26145f440"
+    },
+    {
+      "origin": "arch/arm/boot/dts/modem-MT6739ap-pdata.dtsi",
+      "staged": "src/arch/arm64/boot/dts/mediatek/modem-MT6739ap-pdata.dtsi",
+      "origin_sha256": "81aee26cca0d9c3f49ce4bb54c8e38739d27aeceb946ac0d0c6167a5ca4f1f17",
+      "staged_sha256": "81aee26cca0d9c3f49ce4bb54c8e38739d27aeceb946ac0d0c6167a5ca4f1f17"
+    },
+    {
+      "origin": "arch/arm/boot/dts/k39tv1_bsp_titan_hamster.dts",
+      "staged": "src/arch/arm64/boot/dts/k39tv1_bsp_titan_hamster.dts",
+      "origin_sha256": "993759833503e124fc16d947321a89e1137cd617a7d70ca8347488ebe43027e4",
+      "staged_sha256": "993759833503e124fc16d947321a89e1137cd617a7d70ca8347488ebe43027e4"
+    },
+    {
+      "origin": "arch/arm/boot/dts/k39tv1_bsp_titan_hamster/gpio00.dtsi",
+      "staged": "src/arch/arm64/boot/dts/k39tv1_bsp_titan_hamster/gpio00.dtsi",
+      "origin_sha256": "9df23198c48c72c0bc2643c0c4085e1818d17734474767040e3ff00b31d58617",
+      "staged_sha256": "9df23198c48c72c0bc2643c0c4085e1818d17734474767040e3ff00b31d58617"
+    },
+    {
+      "origin": "arch/arm/boot/dts/k39tv1_bsp_titan_hamster/gpio01.dtsi",
+      "staged": "src/arch/arm64/boot/dts/k39tv1_bsp_titan_hamster/gpio01.dtsi",
+      "origin_sha256": "894f9ecd66d224bb4f4c1413fc05c17ef22d7ea41a8eee37bfa6b10f2a0298ef",
+      "staged_sha256": "894f9ecd66d224bb4f4c1413fc05c17ef22d7ea41a8eee37bfa6b10f2a0298ef"
+    },
+    {
+      "origin": "arch/arm64/boot/dts/mediatek/a02/a02_eur_open_w00_r00.dts",
+      "staged": "src/arch/arm64/boot/dts/mediatek/a02/a02_eur_open_w00_r00.dts",
+      "origin_sha256": "7355649c98a55ffd9f9891c7e320eaf761c67ee176208eee2a5472a07f864906",
+      "staged_sha256": "7355649c98a55ffd9f9891c7e320eaf761c67ee176208eee2a5472a07f864906"
+    },
+    {
+      "origin": "arch/arm64/boot/dts/mediatek/a02/a02_eur_open_w00_r01.dts",
+      "staged": "src/arch/arm64/boot/dts/mediatek/a02/a02_eur_open_w00_r01.dts",
+      "origin_sha256": "a019655ae52ee54546801cf220ff750f9b43ad9b6db21e6d663faef977b2f4fd",
+      "staged_sha256": "a019655ae52ee54546801cf220ff750f9b43ad9b6db21e6d663faef977b2f4fd"
+    },
+    {
+      "origin": "arch/arm64/boot/dts/mediatek/a02/a02_eur_open_w00_r06.dts",
+      "staged": "src/arch/arm64/boot/dts/mediatek/a02/a02_eur_open_w00_r06.dts",
+      "origin_sha256": "1d59e0238d6559996ee0b8d4edf2496d63b37b92951bfb0961755a918349e7f3",
+      "staged_sha256": "1d59e0238d6559996ee0b8d4edf2496d63b37b92951bfb0961755a918349e7f3"
+    },
+    {
+      "origin": "arch/arm64/boot/dts/mediatek/a02/display_lcd_a02_common.dtsi",
+      "staged": "src/arch/arm64/boot/dts/mediatek/a02/display_lcd_a02_common.dtsi",
+      "origin_sha256": "5462940126d0b6ceeee123be77dd1525df9754fb7397fbd030bb73e091f2c267",
+      "staged_sha256": "5462940126d0b6ceeee123be77dd1525df9754fb7397fbd030bb73e091f2c267"
+    },
+    {
+      "origin": "arch/arm64/boot/dts/mediatek/a02/mt6739-a02_common.dtsi",
+      "staged": "src/arch/arm64/boot/dts/mediatek/a02/mt6739-a02_common.dtsi",
+      "origin_sha256": "def5b635a6e7416949fc0dbde59399a8ba5028f74ee04060ceaafc22e40cf77f",
+      "staged_sha256": "def5b635a6e7416949fc0dbde59399a8ba5028f74ee04060ceaafc22e40cf77f"
+    },
+    {
+      "origin": "arch/arm64/boot/dts/mediatek/a02/mt6739.a02_eur_open.00.dtsi",
+      "staged": "src/arch/arm64/boot/dts/mediatek/a02/mt6739.a02_eur_open.00.dtsi",
+      "origin_sha256": "fe80e8a34c34a8d038b76ea95d809af023ee2fd0e1029879dc21afeefe0ecf0c",
+      "staged_sha256": "fe80e8a34c34a8d038b76ea95d809af023ee2fd0e1029879dc21afeefe0ecf0c"
+    },
+    {
+      "origin": "arch/arm64/boot/dts/mediatek/a02/mt6739.a02_eur_open.01.dtsi",
+      "staged": "src/arch/arm64/boot/dts/mediatek/a02/mt6739.a02_eur_open.01.dtsi",
+      "origin_sha256": "fe80e8a34c34a8d038b76ea95d809af023ee2fd0e1029879dc21afeefe0ecf0c",
+      "staged_sha256": "fe80e8a34c34a8d038b76ea95d809af023ee2fd0e1029879dc21afeefe0ecf0c"
+    },
+    {
+      "origin": "arch/arm64/boot/dts/mediatek/a02/mt6739_a02_audio_common.dtsi",
+      "staged": "src/arch/arm64/boot/dts/mediatek/a02/mt6739_a02_audio_common.dtsi",
+      "origin_sha256": "e55eb366cdb80a3361979269ca86353a8800400c44a3e5c6b5599d4ad0f5153f",
+      "staged_sha256": "e55eb366cdb80a3361979269ca86353a8800400c44a3e5c6b5599d4ad0f5153f"
+    },
+    {
+      "origin": "arch/arm64/boot/dts/mediatek/a02/mt6739_a02_camera_00.dtsi",
+      "staged": "src/arch/arm64/boot/dts/mediatek/a02/mt6739_a02_camera_00.dtsi",
+      "origin_sha256": "6f79ee4cb481e2bbaa26db225fc51a553e773129c4ea0cef70fa3dc76723f189",
+      "staged_sha256": "6f79ee4cb481e2bbaa26db225fc51a553e773129c4ea0cef70fa3dc76723f189"
+    },
+    {
+      "origin": "arch/arm64/boot/dts/mediatek/a02/mt6739_a02_eif_common.dtsi",
+      "staged": "src/arch/arm64/boot/dts/mediatek/a02/mt6739_a02_eif_common.dtsi",
+      "origin_sha256": "4c02bc1db06547e892b2145e9a4feebf5466cd2864d1a089ede45d10013ac5b4",
+      "staged_sha256": "4c02bc1db06547e892b2145e9a4feebf5466cd2864d1a089ede45d10013ac5b4"
+    },
+    {
+      "origin": "arch/arm64/boot/dts/mediatek/a02/mt6739_a02_input_common.dtsi",
+      "staged": "src/arch/arm64/boot/dts/mediatek/a02/mt6739_a02_input_common.dtsi",
+      "origin_sha256": "8c9bd145e3f14e1d43b5a7e3d12c23d32a4f96ba4e13c789fc69e7ac993e4141",
+      "staged_sha256": "8c9bd145e3f14e1d43b5a7e3d12c23d32a4f96ba4e13c789fc69e7ac993e4141"
+    },
+    {
+      "origin": "arch/arm64/boot/dts/mediatek/a02/mt6739_a02_pm_common.dtsi",
+      "staged": "src/arch/arm64/boot/dts/mediatek/a02/mt6739_a02_pm_common.dtsi",
+      "origin_sha256": "31f57ce80aa340b04345abf2c7cc7ba824a4ffd67075ab632940445c10b5afc8",
+      "staged_sha256": "31f57ce80aa340b04345abf2c7cc7ba824a4ffd67075ab632940445c10b5afc8"
+    },
+    {
+      "origin": "arch/arm64/boot/dts/mediatek/a02/mt6739_a02_sensor_r00.dtsi",
+      "staged": "src/arch/arm64/boot/dts/mediatek/a02/mt6739_a02_sensor_r00.dtsi",
+      "origin_sha256": "bf6b29de28ae45f4546a801ce71abf560ada9fcb522537fc1c1aaae3b17c176e",
+      "staged_sha256": "bf6b29de28ae45f4546a801ce71abf560ada9fcb522537fc1c1aaae3b17c176e"
+    }
+  ]
+}
