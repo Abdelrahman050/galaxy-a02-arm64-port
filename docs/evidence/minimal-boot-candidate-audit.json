@@ -1,0 +1,43 @@
+{
+  "classification": "UNSIGNED OFFLINE USB-ACM LAYOUT PROTOTYPE; NEVER FLASH",
+  "size_bytes": 11816960,
+  "sha256": "1f4f147bdc9641f0836a35bf3de925cf17d4311399c418d74073aa5ce7d78450",
+  "boot_magic": "ANDROID!",
+  "header_version": 2,
+  "page_size": 2048,
+  "kernel_size": 11742494,
+  "kernel_addr": "0x40080000",
+  "ramdisk_size": 2248,
+  "ramdisk_addr": "0x45000000",
+  "dtb_size": 65740,
+  "dtb_addr": "0x44000000",
+  "image_id_hex": "8821b04e800d1cbb9ea4461340eecd94e708ad47000000000000000000000000",
+  "sections": {
+    "kernel_gzip": {
+      "offset": 2048,
+      "size": 11742494,
+      "padded_size": 11743232
+    },
+    "usb_probe_ramdisk": {
+      "offset": 11745280,
+      "size": 2248,
+      "padded_size": 4096
+    },
+    "candidate_dt_table": {
+      "offset": 11749376,
+      "size": 65740,
+      "padded_size": 67584
+    }
+  },
+  "kernel_gzip_sha256": "be341f7261cb0b5fe6cb1e8d9c3e4b15dbaf1997395d5a6f93d59126184f1ee0",
+  "ramdisk_gzip_sha256": "b6d776d86ed5c419b61e1bb99be17ce56b1df836fb340063fc4f0856a795b4dc",
+  "ramdisk_bytes": 2248,
+  "base_fdt_sha256": "b5314ec277200b532aba7d1302a86abd84ba878a78f3c7216c093a2f21cb825b",
+  "avb_footer_present": false,
+  "avb0_in_tail": false,
+  "samsung_trailer_present": false,
+  "pit_boot_capacity_bytes": 25165824,
+  "capacity_margin_bytes": 13348864,
+  "lk_acceptance_verified": false,
+  "device_boot_verified": false
+}

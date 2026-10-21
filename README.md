@@ -30,7 +30,7 @@ This project is developing both an AArch64 kernel and a complete Android ARM64 u
 - A Samsung MT6739/K39/A02 device-tree source build was compared semantically with official merged firmware trees for revisions r00, r01, and r06. Node, property, and reserved-memory data matched except for the intentional ARMv8 PMU `compatible` change. The three DTBO overlays matched byte-for-byte. This was an isolated source build, not an in-tree `make dtbs` or device boot test.
 - Static LK analysis found a compiled K64 handoff path, including an SMC call site. It does not show that this device takes the path, that the secure monitor accepts the handoff, or that the candidate kernel reaches EL1.
 - PowerVR kernel patches compiled and linked in isolated kernel outputs. GPU operation, display, and graphics userspace compatibility remain untested.
-- An unsigned offline boot-layout prototype fit the measured boot-partition capacity by size. LK/AVB acceptance and a real boot remain unverified.
+- A local-only USB-ACM Minimal AArch64 Boot Proof layout was structurally checked at 11,816,960 bytes. Its detailed header, component hashes, `/init`, memory arithmetic, and evidence limits are in [`docs/minimal-aarch64-boot-image.md`](docs/minimal-aarch64-boot-image.md); the binary and initramfs are not distributed. LK/AVB acceptance, UDC/COM behavior, and a real boot remain unverified.
 
 ## Current blockers
 
@@ -38,6 +38,7 @@ This project is developing both an AArch64 kernel and a complete Android ARM64 u
 - `SEC_DEBUG` is disabled in the current ARM64 configuration. Architecture-specific candidate patches were reviewed but not built with `SEC_DEBUG` enabled.
 - The official Android system and vendor stack inspected so far are 32-bit. The stock graphics mapper, gralloc, EGL/GLES, HWC, and Vulkan libraries checked are ELF32; no compatible ARM64 graphics stack has been verified.
 - Candidate-image signature and AVB acceptance, LK load/decompression addresses, secure-world behavior, early log capture, and recovery after a failed boot have not been demonstrated.
+- The USB-ACM marker path is implemented and passed offline source/artifact checks, but the phone's USB UDC, Windows COM enumeration, and marker reception have not been hardware-tested. Odin's one-member rollback mapping and a current independent data backup are also unverified.
 - Android ARM64 has not been built or booted on this device. No `arm64-v8a` application has been run on it.
 
 The present flash-readiness decision is **NO-GO**. Later user-reported observations indicated `flash.locked=0`, `vbmeta.device_state=unlocked`, `verifiedbootstate=orange`, bootloader build `A022FXXS3BWH1`, and Odin recognition in Download Mode. A raw capture and timestamp were not retained with the evidence. These observations describe the reported state at that time; they do not establish that LK accepts the experimental image or that recovery is safe.
@@ -47,6 +48,7 @@ The present flash-readiness decision is **NO-GO**. Later user-reported observati
 - [`STATUS.md`](STATUS.md): PASS / FAIL / UNVERIFIED evidence matrix.
 - [`ROADMAP.md`](ROADMAP.md): staged development path toward Android ARM64 and `arm64-v8a` execution.
 - [`docs/`](docs/): kernel QA, device tree, LK, boot layout, userspace, graphics, RAM-console, reproducibility, and readiness reports.
+- [`probes/minimal-aarch64-usb-acm/`](probes/minimal-aarch64-usb-acm/): source-only experimental AArch64 `/init` and bounded USB-ACM reader; no built artifacts.
 - [`patches/`](patches/): ordered kernel changes, unmerged candidates, and separate device-tree adaptations.
 - [`config/`](config/): the saved ARM64 kernel configuration.
 - [`scripts/`](scripts/): build and bounded, read-only audit tools.
@@ -66,8 +68,10 @@ python3 scripts/build_kernel.py
 
 The helper refuses a non-empty `KERNEL_OUT` and writes configuration, build outputs, and a log only beneath that separate directory. It does not package or flash an image. A successful build is a compile/link result, not a boot or runtime result.
 
+The separate [Minimal AArch64 Boot Image record](docs/minimal-aarch64-boot-image.md) documents the newest local-only header-v2 layout and how to reproduce the allowed kernel/initramfs inputs. The current USB candidate itself is not in the repository, and exact full-image recreation from the public tree alone is not yet established. Its readiness and rollback gates remain in [flash readiness](docs/flash-readiness.md) and [Odin recovery readiness](docs/odin-recovery-readiness.md).
+
 ## Safety and redistribution
 
 This is research material, not a flashable ROM. Do not use any generated or experimental image for flashing. No device operation is part of this repository's build or audit scripts. Firmware, proprietary blobs, private keys, full backups, LK binaries, and generated boot images are intentionally excluded. The public source subset contains 12 reviewed patches; the firmware-derived PMU patch is retained in the local development copy but excluded from the public Git index and archive. License clearance is **PASS for this exact public subset** and **BLOCKED for the original 13-patch collection** until redistribution rights for that firmware-derived patch are established. See [`docs/license-review-2026-10-20.md`](docs/license-review-2026-10-20.md) for the source-based PMU replacement and evidence. See [`SECURITY.md`](SECURITY.md), [`NOTICE.md`](NOTICE.md), and the per-file upstream notices before reuse.
 
-The included GitHub Actions workflow runs read-only repository checks. This documentation does not claim that a hosted workflow has run; consult the repository's Actions tab for any available results. No CI status badge is included.
+The included GitHub Actions workflow has one successful read-only run on the initial `main` commit; see [`docs/ci.md`](docs/ci.md) for the exact commit and scope. That run did not build the kernel or test the phone. No CI status badge is included.

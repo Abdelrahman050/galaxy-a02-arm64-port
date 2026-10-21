@@ -1,0 +1,13 @@
+Offline component measurements for the local-only USB-ACM candidate, rechecked on 2026-10-21. These hashes identify components; they do not redistribute the corresponding executables.
+
+Local probe source and helper hashes:
+  init.c             eed092d598d0dfaaabd3fe62a9c365058bd5cb9f9e15a78cff1d5fd904761368
+  build.sh           f7ac7b640aaf91f944a127a7b7a8292cbf8c337eed67b1302f6b8af70dfbef12
+  capture_usb_acm.ps1 9f111e64ec37fe334bdf043000ba058bafdc598714c7c6294be6b4c4544f8a1b
+
+Generated local-only probe components:
+  init (5,696 bytes)                 c959d65ed29b3773aa21f5f3d4ff1427de0e74dfd1b90ea1c8a29999f9d31fac
+  initramfs.cpio (6,656 bytes)       bd3d3fb4893076897399a07ffb07edaaacf89634a2118e2edab45af3578e26c0
+  initramfs.cpio.gz (2,248 bytes)    b6d776d86ed5c419b61e1bb99be17ce56b1df836fb340063fc4f0856a795b4dc
+
+No boot image, kernel binary, firmware image, Odin package, or proprietary blob is included.

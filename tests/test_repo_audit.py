@@ -1,4 +1,5 @@
 import hashlib
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -68,6 +69,37 @@ class RepositoryAuditTests(unittest.TestCase):
         self.assertNotIn(patch, repo_audit.repo_files(self.root))
         self.assertEqual(repo_audit.content_violations(self.root), [])
         self.assertEqual(repo_audit.checksum_violations(self.root), [])
+
+    def test_tracked_local_firmware_derived_patch_is_rejected(self):
+        patch = self.put(
+            "patches/device-tree/0001-a02-arm64-pmu-compat.patch",
+            "local-only review fixture\n")
+        subprocess.run(["git", "init", "-q", str(self.root)], check=True)
+        subprocess.run(["git", "-C", str(self.root), "add", str(patch)], check=True)
+
+        self.assertIn(patch, repo_audit.repo_files(self.root))
+        violations = repo_audit.content_violations(self.root)
+        self.assertTrue(any("local-only path is tracked" in e for e in violations))
+
+    def test_tracked_local_review_is_rejected_even_when_safe_text(self):
+        review = self.put("PRE-PUBLISH-REVIEW.md", "local review only\n")
+        subprocess.run(["git", "init", "-q", str(self.root)], check=True)
+        subprocess.run(["git", "-C", str(self.root), "add", str(review)], check=True)
+
+        self.assertIn(review, repo_audit.repo_files(self.root))
+        violations = repo_audit.content_violations(self.root)
+        self.assertTrue(any("local-only path is tracked" in e for e in violations))
+
+    def test_ignored_firmware_binary_is_rejected_if_force_tracked(self):
+        self.put(".gitignore", "*.img\n")
+        image = self.put("firmware/boot.img", "placeholder")
+        subprocess.run(["git", "init", "-q", str(self.root)], check=True)
+        subprocess.run(["git", "-C", str(self.root), "add", ".gitignore"], check=True)
+        subprocess.run(["git", "-C", str(self.root), "add", "-f", str(image)], check=True)
+
+        self.assertIn(image, repo_audit.repo_files(self.root))
+        violations = repo_audit.content_violations(self.root)
+        self.assertTrue(any("forbidden file type" in e for e in violations))
 
 
 if __name__ == "__main__":

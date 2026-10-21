@@ -25,6 +25,8 @@ The project goal is a complete Android ARM64 system on SM-A022F that runs applic
 - Establish a reliable early-log channel and a recovery procedure for the exact model and bootloader. Assess user-data loss explicitly.
 - Run a minimal AArch64 `/init` proof only after the separate human-reviewed readiness gate and explicit owner authorization.
 
+An offline USB-ACM `/init` marker design and candidate image layout are now documented in [`docs/minimal-aarch64-boot-image.md`](docs/minimal-aarch64-boot-image.md). The controller and host enumeration have not been tested; the candidate remains unsigned and local-only. This is preparation for the gate, not exit evidence.
+
 **Exit evidence:** observed execution into AArch64 `/init` with attributable early logs, plus a tested recovery path. Static LK disassembly or a fitting image size is insufficient.
 
 ## Gate 3 — Build the Android ARM64 platform

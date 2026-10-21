@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -38,17 +39,74 @@ LOCAL_ONLY_FILES = {
 }
 
 
+def is_git_root(root: Path) -> bool:
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "--show-toplevel"],
+            check=False, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True,
+        )
+    except OSError:
+        return False
+    return result.returncode == 0 and Path(result.stdout.strip()).resolve() == root.resolve()
+
+
+def tracked_paths(root: Path) -> set[str]:
+    """Return indexed paths when root is a Git worktree; support plain test trees."""
+    if not is_git_root(root):
+        return set()
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(root), "ls-files", "--cached", "-z"],
+            check=False, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+        )
+    except OSError:
+        return set()
+    if result.returncode != 0:
+        return set()
+    return {item.decode("utf-8", errors="surrogateescape")
+            for item in result.stdout.split(b"\0") if item}
+
+
 def repo_files(root: Path) -> list[Path]:
+    tracked = tracked_paths(root)
+    if not is_git_root(root):
+        return sorted(
+            p for p in root.rglob("*")
+            if p.is_file()
+            and ".git" not in p.parts
+            and p.relative_to(root).as_posix() not in LOCAL_ONLY_FILES
+        )
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(root), "ls-files", "--cached", "--others",
+             "--exclude-standard", "-z"],
+            check=False, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+        )
+    except OSError:
+        result = None
+    if result is not None and result.returncode == 0:
+        paths = [root / item.decode("utf-8", errors="surrogateescape")
+                 for item in result.stdout.split(b"\0") if item]
+        return sorted(
+            p for p in paths
+            if p.is_file()
+            and (p.relative_to(root).as_posix() not in LOCAL_ONLY_FILES
+                 or p.relative_to(root).as_posix() in tracked)
+        )
     return sorted(
         p for p in root.rglob("*")
         if p.is_file()
         and ".git" not in p.parts
-        and p.relative_to(root).as_posix() not in LOCAL_ONLY_FILES
+        and (p.relative_to(root).as_posix() not in LOCAL_ONLY_FILES
+             or p.relative_to(root).as_posix() in tracked)
     )
 
 
 def content_violations(root: Path) -> list[str]:
     problems: list[str] = []
+    indexed_local_only = LOCAL_ONLY_FILES & tracked_paths(root)
+    problems.extend(f"local-only path is tracked: {rel}"
+                    for rel in sorted(indexed_local_only))
     for path in repo_files(root):
         rel = path.relative_to(root).as_posix()
         if path.suffix.lower() in FORBIDDEN_SUFFIXES:
