@@ -2,6 +2,18 @@
  * Isolated Minimal AArch64 boot probe with an optional USB CDC-ACM marker.
  * Freestanding PID 1: no libc, shell, Android init, or partition writes.
  */
+#include "probe_identity.h"
+
+#ifndef A02_USB_VID
+#error "build.sh must generate a reviewed USB VID"
+#endif
+#ifndef A02_USB_PID
+#error "build.sh must generate a reviewed USB PID"
+#endif
+#ifndef A02_USB_SERIAL
+#error "build.sh must generate a unique USB serial string"
+#endif
+
 typedef unsigned long usize;
 
 #define AT_FDCWD (-100)
@@ -115,6 +127,20 @@ static long write_path(const char *p, const char *s)
     return r == (long)n ? 0 : (r < 0 ? r : -5);
 }
 
+static int set_usb_id(const char *path, unsigned int value)
+{
+    static const char hex[] = "0123456789abcdef";
+    char text[7];
+    text[0] = '0';
+    text[1] = 'x';
+    text[2] = hex[(value >> 12) & 0xf];
+    text[3] = hex[(value >> 8) & 0xf];
+    text[4] = hex[(value >> 4) & 0xf];
+    text[5] = hex[value & 0xf];
+    text[6] = '\0';
+    return write_path(path, text) == 0;
+}
+
 static long read_path(const char *p, char *buf, usize cap)
 {
     long fd = sc4(56, AT_FDCWD, (long)p, O_RDONLY, 0);
@@ -157,11 +183,11 @@ static int prepare_gadget(void)
     if (!mkdir_ok("/sys/kernel/config/usb_gadget/a02probe/functions")) return 0;
     if (!mkdir_ok("/sys/kernel/config/usb_gadget/a02probe/functions/acm.usb0")) return 0;
 
-    if (write_path("/sys/kernel/config/usb_gadget/a02probe/idVendor", "1d6b") < 0) return 0;
-    if (write_path("/sys/kernel/config/usb_gadget/a02probe/idProduct", "0104") < 0) return 0;
-    if (write_path("/sys/kernel/config/usb_gadget/a02probe/bcdUSB", "0200") < 0) return 0;
-    if (write_path("/sys/kernel/config/usb_gadget/a02probe/bcdDevice", "0100") < 0) return 0;
-    if (write_path("/sys/kernel/config/usb_gadget/a02probe/strings/0x409/serialnumber", "A02ARM64PROBE") < 0) return 0;
+    if (!set_usb_id("/sys/kernel/config/usb_gadget/a02probe/idVendor", A02_USB_VID)) return 0;
+    if (!set_usb_id("/sys/kernel/config/usb_gadget/a02probe/idProduct", A02_USB_PID)) return 0;
+    if (write_path("/sys/kernel/config/usb_gadget/a02probe/bcdUSB", "0x0200") < 0) return 0;
+    if (write_path("/sys/kernel/config/usb_gadget/a02probe/bcdDevice", "0x0100") < 0) return 0;
+    if (write_path("/sys/kernel/config/usb_gadget/a02probe/strings/0x409/serialnumber", A02_USB_SERIAL) < 0) return 0;
     if (write_path("/sys/kernel/config/usb_gadget/a02probe/strings/0x409/manufacturer", "Local boot proof") < 0) return 0;
     if (write_path("/sys/kernel/config/usb_gadget/a02probe/strings/0x409/product", "A02 ARM64 probe") < 0) return 0;
     if (write_path("/sys/kernel/config/usb_gadget/a02probe/configs/c.1/strings/0x409/configuration", "AArch64 init proof") < 0) return 0;

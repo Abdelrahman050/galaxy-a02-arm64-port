@@ -38,7 +38,7 @@ This project is developing both an AArch64 kernel and a complete Android ARM64 u
 - `SEC_DEBUG` is disabled in the current ARM64 configuration. Architecture-specific candidate patches were reviewed but not built with `SEC_DEBUG` enabled.
 - The official Android system and vendor stack inspected so far are 32-bit. The stock graphics mapper, gralloc, EGL/GLES, HWC, and Vulkan libraries checked are ELF32; no compatible ARM64 graphics stack has been verified.
 - Candidate-image signature and AVB acceptance, LK load/decompression addresses, secure-world behavior, early log capture, and recovery after a failed boot have not been demonstrated.
-- The USB-ACM marker path is implemented and passed offline source/artifact checks, but the phone's USB UDC, Windows COM enumeration, and marker reception have not been hardware-tested. Odin's one-member rollback mapping and a current independent data backup are also unverified.
+- The retained USB-ACM candidate uses a Linux Foundation sample VID/PID and must not be treated as a ready observation image. Source review also found its unprefixed ConfigFS descriptor values conflict with the upstream Linux 4.14 base-autodetect parser, so gadget setup is expected to fail at `idVendor` unless Samsung's 4.14.186 source differs. The PR-review source now emits `0x`-prefixed values, requires an explicitly authorized identity, and the host reader waits for its exact PnP match; this revised source has not been built into a candidate. UDC, Windows COM enumeration, and marker reception remain untested. Odin's one-member rollback mapping and a current independent data backup are also unverified.
 - Android ARM64 has not been built or booted on this device. No `arm64-v8a` application has been run on it.
 
 The present flash-readiness decision is **NO-GO**. Later user-reported observations indicated `flash.locked=0`, `vbmeta.device_state=unlocked`, `verifiedbootstate=orange`, bootloader build `A022FXXS3BWH1`, and Odin recognition in Download Mode. A raw capture and timestamp were not retained with the evidence. These observations describe the reported state at that time; they do not establish that LK accepts the experimental image or that recovery is safe.
@@ -48,7 +48,7 @@ The present flash-readiness decision is **NO-GO**. Later user-reported observati
 - [`STATUS.md`](STATUS.md): PASS / FAIL / UNVERIFIED evidence matrix.
 - [`ROADMAP.md`](ROADMAP.md): staged development path toward Android ARM64 and `arm64-v8a` execution.
 - [`docs/`](docs/): kernel QA, device tree, LK, boot layout, userspace, graphics, RAM-console, reproducibility, and readiness reports.
-- [`probes/minimal-aarch64-usb-acm/`](probes/minimal-aarch64-usb-acm/): source-only experimental AArch64 `/init` and bounded USB-ACM reader; no built artifacts.
+- [`probes/minimal-aarch64-usb-acm/`](probes/minimal-aarch64-usb-acm/): source-only experimental AArch64 `/init` and identity-matched USB-ACM reader; the revised source has not been incorporated into the local candidate.
 - [`patches/`](patches/): ordered kernel changes, unmerged candidates, and separate device-tree adaptations.
 - [`config/`](config/): the saved ARM64 kernel configuration.
 - [`scripts/`](scripts/): build and bounded, read-only audit tools.
