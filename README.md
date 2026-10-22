@@ -52,6 +52,7 @@ The present flash-readiness decision is **NO-GO**. Later user-reported observati
 - [`patches/`](patches/): ordered kernel changes, unmerged candidates, and separate device-tree adaptations.
 - [`config/`](config/): the saved ARM64 kernel configuration.
 - [`scripts/`](scripts/): build and bounded, read-only audit tools.
+- [Engineering case studies](docs/case-studies/README.md): six evidence-backed studies and the broader incident inventory.
 
 ## Reproduction overview
 
