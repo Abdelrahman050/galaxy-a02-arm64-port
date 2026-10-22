@@ -47,6 +47,28 @@ The retained logs show successive source/configuration attempts with compile and
 - A clean-output make Image run exited 0. The saved .config and System.map hashes matched the earlier output, while Image and vmlinux hashes differed. A binary comparison reported 11,443 differing Image bytes. The possible build-banner contribution was not fully isolated, so bit-for-bit reproducibility is not claimed.
 - The raw Image was larger than the recorded 24 MiB boot partition; compression and bootloader behavior were investigated separately.
 
+## Follow-up Reproduction Investigation — 2026-10-22
+
+This read-only follow-up tested whether the saved first-build versus clean-build hash difference could be attributed only to the kernel build banner or debug metadata. No kernel rebuild was run. The preserved artifacts were checked against their SHA-256 manifests, their ELF64/AArch64 section tables were compared, and same-address/same-size `.text` function symbols were compared byte-for-byte.
+
+| Section | Address | Earlier / clean size | Changed bytes | Changed fraction |
+| --- | ---: | ---: | ---: | ---: |
+| `.text` | `0xffffff8008080800` | 15,355,120 / 15,355,120 | 656 | 0.004272% |
+| `.rodata` | `0xffffff8009000000` | 7,755,858 / 7,755,858 | 9,871 | 0.127272% |
+| `.init.text` | `0xffffff8009800000` | 446,528 / 446,528 | 367 | 0.082190% |
+| `.init.data` | `0xffffff80098c4000` | 74,752 / 74,752 | 120 | 0.160531% |
+| `.data` | `0xffffff8009a00000` | 1,557,224 / 1,557,224 | 421 | 0.027035% |
+
+The equal-sized `Image` files differ at 11,443 bytes in 1,874 runs. In the ELF pair, 198 of 58,279 matched `.text` function symbols with the same address and size contain changed linked bytes. Therefore the observed mismatch is not confined to debug information or the build banner. This establishes different machine-code bytes, not a functional regression or which build is correct.
+
+Debug metadata also differs substantially: `.debug_line` grows by 96,927 bytes, `.debug_info` by 99 bytes, and `.debug_str` by 3 bytes. The complete clean `vmlinux` is 97,032 bytes larger. The embedded Linux version strings show build number `#3` versus `#1` and timestamps `14:27:54` versus `15:34:51` EEST on 2026-10-18. The visible Clang/LLD identity strings agree, but the actual compiler and linker executables were not hashed.
+
+The saved `.config` and `System.map` match. The clean build used a new output directory, but both builds reference the same mutable source-tree path. No paired source commit/diff, applied-patch manifest, compiler/linker binary hashes, generated-header manifest, or complete environment snapshot was retained. Stale incremental objects, source/patch changes, toolchain binaries, and generated build inputs therefore remain possible causes. None is established. The current preserved build artifacts are valid and match their manifests; no truncation or corruption is confirmed in this pair. This does not verify the missing historical `.tmp_vmlinux*` files associated with the earlier mksysmap incident.
+
+The later Minimal AArch64 boot candidate is a separate artifact: its 11,742,494-byte gzip kernel decompresses to SHA-256 `631581ff73a88a4b9a53b69a43660678c0e714ab5009d37212e9add583543131`, matching the saved later GPU-guard `Image`, not either image in the comparison pair. The boot candidate itself remains local and untested on the device.
+
+**Follow-up status:** verified build differences; bit-for-bit reproducibility failed for this pair; cause remains **INCONCLUSIVE**. No synthetic failure was run because it would not distinguish the missing historical inputs. Raw binaries and build logs remain local; the public record contains only hashes and derived measurements.
+
 ## Remaining limitations
 
 SEC_DEBUG is still disabled. The RAM-console ABI differs between the stock ARM32 and experimental ARM64 builds. The clean-build machine code was not bit-identical. The build did not test modules, SPM/watchdog runtime, the device tree handoff, LK, Android, or phone boot.
