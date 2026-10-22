@@ -6,7 +6,8 @@ import unittest
 from pathlib import Path
 
 
-SCRIPT = Path(__file__).with_name("compare_elf_text_ranges.py")
+REPO_SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "compare_elf_text_ranges.py"
+SCRIPT = REPO_SCRIPT if REPO_SCRIPT.is_file() else Path(__file__).with_name("compare_elf_text_ranges.py")
 SPEC = importlib.util.spec_from_file_location("compare_elf_text_ranges", SCRIPT)
 MODULE = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = MODULE
