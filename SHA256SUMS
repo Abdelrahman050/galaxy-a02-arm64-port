@@ -4,7 +4,7 @@ a23e4bb66f25633e6d950c0c023d10a13639d13078451af934448028c97c79ad  .gitignore
 cf28ea2d10ed44db355ef454ab9cc395b0ae2c82d870e396cba1bc8a197ef354  config/a02-arm64.config
 526a810e658571a4239087c926043c44e22ccb5b9c983424e59c9372de37433b  docs/android-userspace-audit.md
 80709c85108f4f196da42d32a6eb6165b5e99ea0bb63c757ea6caafcac9025c0  docs/boot-layout-audit.md
-8bc6f59ca29c8a3222d92038b23614e298c952ae05b0933df88b0459ca298ca4  docs/case-studies/01-aarch64-kernel-bring-up.md
+3db5fe5c8a5eedf9bcd9551048eb74b63e5af04690c3c6505723329a633e40f3  docs/case-studies/01-aarch64-kernel-bring-up.md
 82811deac7a42aabfb8a6be499689c30c8e987e681704f15e1e733259f3f6fce  docs/case-studies/02-powervr-dvfs-corrections.md
 644d9b634523b383fc29f40e2dda174613990fc299617d7d1b969e9c3d8ffaf3  docs/case-studies/03-sm-a022f-device-tree-reconstruction.md
 0b1d4f709140f6b9c73209b624aeb2cabcf196bede0e4fc1420d96a04b465087  docs/case-studies/04-boot-header-v2-layout.md
