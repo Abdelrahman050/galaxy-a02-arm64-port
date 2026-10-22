@@ -1,0 +1,24 @@
+Offline component measurements for the local-only USB-ACM candidate, rechecked on 2026-10-21. These hashes identify components; they do not redistribute the corresponding executables.
+
+Producer source and helper hashes recorded for the retained candidate (historical revision):
+  init.c             eed092d598d0dfaaabd3fe62a9c365058bd5cb9f9e15a78cff1d5fd904761368
+  build.sh           f7ac7b640aaf91f944a127a7b7a8292cbf8c337eed67b1302f6b8af70dfbef12
+  capture_usb_acm.ps1 9f111e64ec37fe334bdf043000ba058bafdc598714c7c6294be6b4c4544f8a1b
+
+PR review source revision (2026-10-21; **not used to build the retained candidate**):
+  init.c             b2079baa9b94aaaa099c69d501b2862dba4233385e299fc9969871f71fc5d775
+  build.sh           e18afd72e4454416345358bcb79e57d25dd720e4baabed89e2a512661b9325e1
+  capture_usb_acm.ps1 aae62d80e48434a18573bf271d7e477b5046785fc675e61d5dc1e887970d00d9
+
+Isolated native-Clang review link of revised `init.c` (not a build-helper or initramfs build):
+  PASS: ELF64 little-endian AArch64, 5,520 bytes, ELF machine 183 (`EM_AARCH64`), entry 0x210758.
+  Clang 21.1.6; compile-time-only synthetic identity macros; no device was enumerated or contacted. The temporary ELF was deleted after inspection and is not a project artifact.
+
+Generated local-only probe components:
+  init (5,696 bytes)                 c959d65ed29b3773aa21f5f3d4ff1427de0e74dfd1b90ea1c8a29999f9d31fac
+  initramfs.cpio (6,656 bytes)       bd3d3fb4893076897399a07ffb07edaaacf89634a2118e2edab45af3578e26c0
+  initramfs.cpio.gz (2,248 bytes)    b6d776d86ed5c419b61e1bb99be17ce56b1df836fb340063fc4f0856a795b4dc
+
+The retained candidate itself was re-read on 2026-10-21: 11,816,960 bytes, SHA-256 `1f4f147bdc9641f0836a35bf3de925cf17d4311399c418d74073aa5ce7d78450`. It is unchanged and does not contain the revised source.
+
+No boot image, kernel binary, firmware image, Odin package, or proprietary blob is included.

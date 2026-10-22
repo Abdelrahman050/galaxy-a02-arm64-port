@@ -1,9 +1,11 @@
-# Safe CI Proposal
+# CI Record and Boundaries
 
-`.github/workflows/quality.yml` is a draft read-only workflow. It runs repository integrity checks and Python syntax checks only. It does not download Samsung source or firmware, build kernel images, run a device tool, or request secrets.
+The repository's read-only workflow `.github/workflows/quality.yml` has run on GitHub. Run 1 on `main`, commit `b08646591106073875a70963e16c9d6051dbccb9`, completed successfully on 2026-10-20. The single `checks` job passed repository-content/SHA-256 verification, Python syntax checking, and synthetic repository-audit tests. See the [run](https://github.com/Abdelrahman050/galaxy-a02-arm64-port/actions/runs/39474974322).
 
-The workflow uses `pull_request`, `push`, and manual dispatch, grants only `contents: read`, disables persisted checkout credentials, and pins `actions/checkout` to commit `3d3c42e5aac5ba805825da76410c181273ba90b1` (release v7.0.1 as checked on 2026-10-20). The action reference and current release should be rechecked before publication. This workflow has not been run on GitHub; no badge or successful remote CI claim is made.
+After adding a syntax-only `bash -n` step for the experimental probe builder, PR run 5 on commit `f6adee4b5e9d2b0ba80213ba4a84dac186186e6a` completed successfully on 2026-10-21. The job passed repository-content/SHA-256 verification, Python syntax checking, the Bash syntax check, and synthetic repository-audit tests. See the [run](https://github.com/Abdelrahman050/galaxy-a02-arm64-port/actions/runs/39658179586).
 
-The kernel build is intentionally not in CI: Samsung source and firmware are external, large inputs, and a clean-room environment would need controlled provenance, licensing, toolchain provisioning, and a much larger runner. Future CI can add source-free synthetic tests and patch parsing after review.
+This is one successful CI run for that commit, not a claim that kernel builds, boot images, hardware, or Android are tested by CI. The workflow is triggered by `pull_request`, `push`, and manual dispatch; grants `contents: read`; disables persisted checkout credentials; and pins `actions/checkout` to `3d3c42e5aac5ba805825da76410c181273ba90b1`. Recheck the action pin before future workflow changes.
+
+CI does not download Samsung source or firmware, build kernel images or the C probe, or access devices. The Bash step checks parsing only. Local review includes offline ELF/CPIO/gzip/image-layout validation, but the USB UDC, Windows COM enumeration, bootloader acceptance, and device execution remain outside CI.
 
 References: [actions/checkout releases](https://github.com/actions/checkout/releases) and [GitHub Actions workflow syntax and permissions](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax).

@@ -17,3 +17,7 @@ The exact public subset contains 12 patches with reviewed GPLv2 or GPLv2-or-late
 ## Repository hygiene checks
 
 The included `scripts/repo_audit.py`, tests, and top-level `SHA256SUMS` provide repeatable checks for file inventory, manifest integrity, forbidden binary/archive suffixes, size limits, and a limited set of secret and local-path patterns. These checks are not comprehensive and cannot establish that every secret or legal issue has been found. Review file-level notices and source provenance before reuse.
+
+## GitHub license classifier metadata
+
+On 2026-10-21 the GitHub repository API reported `license.spdx_id=NOASSERTION` (`name=Other`). This is GitHub's content classifier result, not a license grant or a legal finding. The root `LICENSE` retains the existing GPL version 2 text and kernel notice; source patches retain their own reviewed GPLv2 or GPLv2-or-later provenance, while the original PMU patch remains excluded. The new freestanding probe and its helpers are original project material under the repository license. No SPDX identifier was added to the root file because doing so without a complete per-file SPDX review could incorrectly suggest one license applies to every upstream-derived file. No third-party rights were changed. The classifier result remains an explicit metadata limitation.

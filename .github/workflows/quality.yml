@@ -24,5 +24,8 @@ jobs:
       - name: Check Python syntax without generating bytecode
         run: python3 -B scripts/check_python_syntax.py
 
+      - name: Syntax-check USB probe build helper
+        run: bash -n probes/minimal-aarch64-usb-acm/build.sh
+
       - name: Run synthetic repository audit tests
         run: python3 -B -m unittest discover -s tests -v

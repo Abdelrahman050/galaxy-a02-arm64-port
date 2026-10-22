@@ -4,11 +4,11 @@
 
 ## What is known
 
-- An unsigned offline boot-layout prototype fit the recorded boot-partition capacity by size. It was not accepted by LK or AVB in a device test.
+- The current local-only USB-ACM header-v2 layout is 11,816,960 bytes and fits the recorded 24 MiB boot-partition capacity by arithmetic. Its SHA-256 is `1f4f147bdc9641f0836a35bf3de925cf17d4311399c418d74073aa5ce7d78450`. Offline structural validation is detailed in [the image record](minimal-aarch64-boot-image.md); no executable image is included here.
 - LK disassembly contains a compiled K64 SMC/gzip branch. Selection of this path, exact runtime addresses, secure-monitor acceptance, and transfer into the ARM64 kernel remain unverified.
-- The proposed minimal `/init` is static AArch64 and can emit a console marker in its intended environment. No physical UART pinout/log session has demonstrated that the phone would expose this output.
+- The retained candidate's AArch64 PID 1 uses VID/PID `1d6b:0104`, identified by USB-ID records as Linux Foundation's Multifunction Composite Gadget, and is not a project-assigned identity. It also writes unprefixed hexadecimal-looking values to ConfigFS attributes parsed by upstream Linux v4.14 with base autodetection: the `1d6b` VID text is expected to be rejected, while leading-zero `0104`/`0200`/`0100` are octal. Exact Samsung 4.14.186 parser confirmation remains open. Revised PR-review source emits `0x`-prefixed numeric attributes, requires an explicitly authorized VID/PID and unique serial, and the Windows listener waits for that exact PnP identity; this source is not in the retained image and has not been rebuilt. Do not use the current candidate for an observation test. The expected positive marker is `A02 ARM64 boot probe: PID 1 entered; uname.machine=aarch64`. The phone UDC, Windows COM enumeration, and marker path have not been tested. No trustworthy SM-A022F UART pinout is available. Silence or no matching COM device would be inconclusive.
 - RAM-console compatibility is unresolved; the compatibility candidate has only object-build and offline layout evidence. `SEC_DEBUG` is disabled in the saved kernel configuration.
-- The recovery manifest refers to the official firmware bundle, which is excluded from this repository. Recovery after a failed candidate has not been tested. Full-firmware recovery may affect user data.
+- The matching official firmware is external. An isolated one-member candidate TAR and stock-boot rollback TAR were checked by listing and member hashes but were not submitted to Odin. Odin's acceptance/mapping and recovery after a failed candidate have not been tested. Full-firmware recovery may affect user data.
 
 ## Later user-reported observations
 
@@ -26,10 +26,11 @@ The raw console output or screenshot and capture timestamp were not retained in 
 
 ## Blocking evidence
 
-1. No candidate-specific signature/AVB acceptance proof from the target LK/TEE.
-2. No observed runtime K64 handoff or verified load/decompression addresses.
-3. No tested early-log path reaching `/init`.
-4. No tested recovery procedure for this exact candidate and bootloader, with data-loss risk reviewed.
-5. RAM-console and SEC_DEBUG architecture gaps remain open.
+1. No current independent user-data backup is documented; full-firmware recovery can erase data.
+2. Odin one-member boot-only candidate and stock rollback package mapping is unverified, and no tested recovery route exists for this exact model/build.
+3. No phone UDC/COM enumeration or `/init` marker observation has been performed. This is a planned positive-only proof channel, not a precondition to prove LK accepts the candidate.
+4. The current local candidate has a third-party USB identity and a likely ConfigFS numeric-format failure. Before any observation test, a new image must be built from the corrected source with an authorized VID/PID and unique serial, then its complete image size, hash, signature state, and boot layout must be audited afresh.
+5. The unsigned candidate's AVB/Samsung-signature acceptance, K64 runtime branch, and actual decompression/output memory behavior are unknown; those are intended hardware-test questions, not established passes.
+6. RAM-console ABI and `SEC_DEBUG` remain separate kernel QA issues. They are not used by the probe's observation path, but remain open for kernel stability and later Android work.
 
-All future hardware testing remains a separate stage requiring a fresh risk review and the owner's explicit authorization. Repository scripts do not issue device commands.
+The shortest next path is a verified data backup, trusted confirmation of a tested recovery path for the single `boot` partition (or explicit acceptance of full-firmware/data-loss risk), and owner review/approval of the exact write, reboot, observation, and recovery plan. A historical Odin detection report does not replace a fresh check. The [Odin recovery note](odin-recovery-readiness.md) records these limits. Repository scripts do not issue device commands.

@@ -1,4 +1,4 @@
-# Reproducing the offline kernel work
+# Reproducing the offline kernel and probe work
 
 ## Inputs and provenance
 
@@ -27,6 +27,12 @@ The independent QA build copied the saved `.config` into a fresh output director
 
 When comparing two successful builds, do not assume bitwise-identical `Image` or `vmlinux` unless build timestamps and all generated metadata are controlled. Inspect architecture, link/map consistency, configuration, warnings, and the exact build log. Preserve both output directories.
 
-## Device tree and boot probe
+## Device tree and minimal AArch64 boot probe
 
-The [FDT staging scripts](../scripts/device-tree/README.md) compare read-only firmware DTBs and write candidate DTBs only to a separate directory. The [source integration plan](source-device-tree-plan.md) records the Samsung-base method and historical generic-base gap. The Phase 2 minimal boot probe source and compiled archive are excluded; its intended console behavior and missing runtime proof are summarized in [flash readiness](flash-readiness.md). The [boot-layout audit](boot-layout-audit.md) records the unsigned offline layout findings; prototype builders and images are not included.
+The [FDT staging scripts](../scripts/device-tree/README.md) compare read-only firmware DTBs and write candidate DTBs only to a separate directory. The [source integration plan](source-device-tree-plan.md) records the Samsung-base method and historical generic-base gap.
+
+The newer USB-ACM PID 1 source and host reader are included under [`probes/minimal-aarch64-usb-acm/`](../probes/minimal-aarch64-usb-acm/). `build.sh` uses the existing Clang `r383902` and the authorized kernel source copy's `usr/gen_init_cpio`; set `KERNEL_WORK_ROOT` to that separate copy, provide an authorized `USB_VID`, assigned `USB_PID`, unique `USB_SERIAL`, and an empty `PROBE_OUT`, then run the helper from the probe directory. It fixes timestamps for the ELF/CPIO/gzip outputs and refuses to overwrite non-empty output. The revised source writes explicit `0x` prefixes for USB VID/PID and BCD ConfigFS values, following the Linux v4.14 base-autodetection parser. These PR-review source files are newer than the retained local image and are not represented by its component hashes. See [component and source-revision hashes](evidence/minimal-initramfs-checksums.txt).
+
+The local header-v2 USB candidate was parsed and validated offline; its full binary is deliberately not distributed. The exact USB-variant image packer source/invocation was not retained in the public package, so a developer can reproduce the kernel, source FDT, and initramfs inputs from authorized sources but cannot claim byte-for-byte recreation of this final image from this repository alone. Header values and byte layout are published in the [minimal image record](minimal-aarch64-boot-image.md). No hardware validation or flash is part of the procedure.
+
+The [earlier boot-layout audit](boot-layout-audit.md) records previous unsigned layout prototypes; their sizes and hashes are separate from the newest USB candidate.

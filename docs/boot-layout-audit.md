@@ -13,4 +13,4 @@ The Phase 2 work assembled unsigned Android boot-header-v2 layout prototypes in 
 
 The original prototype builder and generated image audits are not included because they create firmware-derived boot artifacts. The reports retain the findings and limitations without packaging an experimental image. The unsigned layout is **not flashable** and must not be treated as a candidate ready for device use.
 
-For the current readiness blockers, see [`flash-readiness.md`](flash-readiness.md). For address and device-tree evidence, see [`device-tree-bootloader.md`](device-tree-bootloader.md) and [`lk-handoff.md`](lk-handoff.md).
+For the current readiness blockers, see [`flash-readiness.md`](flash-readiness.md). For address and device-tree evidence, see [`device-tree-bootloader.md`](device-tree-bootloader.md) and [`lk-handoff.md`](lk-handoff.md). The newer USB-ACM layout is a separate artifact with its own size and digest; see the [Minimal AArch64 boot image record](minimal-aarch64-boot-image.md). Do not conflate its measurements with the historical layouts in this report.
