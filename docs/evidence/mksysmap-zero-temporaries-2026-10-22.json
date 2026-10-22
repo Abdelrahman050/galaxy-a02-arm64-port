@@ -1,0 +1,47 @@
+{
+  "evidence_class": "archived historical output; read-only streamed verification",
+  "archive": {
+    "name": "out-arm64-a02.tar.gz",
+    "size_bytes": 392030108,
+    "sha256": "0b67b73df2c1abe45eef9cbe8cade80cf53f65a411c2ed7066c3656663d4b361",
+    "streamed_tar_members": 13418,
+    "regular_file_payload_bytes": 2038215414,
+    "gzip_tar_stream_read_to_eof": true
+  },
+  "members": [
+    {
+      "path": "out-arm64-a02/.tmp_vmlinux1",
+      "size_bytes": 279886016,
+      "sha256": "0d42da0dd5abaa13a57d6c1567e14863fe3bd4d4d37ed6e0599558122ae0807c",
+      "all_bytes_zero": true
+    },
+    {
+      "path": "out-arm64-a02/.tmp_vmlinux2.tmp354905b",
+      "size_bytes": 280934616,
+      "sha256": "1e88f8d7fa3567f1fc8d5c56f14fae2a7e945f929249738b6a97811e160cba3f",
+      "all_bytes_zero": true
+    },
+    {
+      "path": "out-arm64-a02/.tmp_kallsyms1.S",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "all_bytes_zero": true
+    },
+    {
+      "path": "out-arm64-a02/.tmp_kallsyms1.o",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "all_bytes_zero": true
+    }
+  ],
+  "conclusion": {
+    "confirmed": "The archived generated temporary files listed above are empty or entirely zero-filled and therefore are not valid ELF/link intermediates.",
+    "not_established": [
+      "Which process created or last wrote the temporary files.",
+      "Whether mksysmap itself emitted the Bus error.",
+      "Whether storage exhaustion, an interrupted linker, an I/O error, tool failure, or another condition caused the files to be zero-filled.",
+      "Corruption of kernel source; this output archive does not prove source-tree damage."
+    ],
+    "scope_limit": "This evidence concerns one archived partial output snapshot. It does not indicate corruption in the later complete build artifacts."
+  }
+}
