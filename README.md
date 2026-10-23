@@ -32,6 +32,7 @@ This project is developing both an AArch64 kernel and a complete Android ARM64 u
 - PowerVR kernel patches compiled and linked in isolated kernel outputs. GPU operation, display, and graphics userspace compatibility remain untested.
 - A local-only USB-ACM Minimal AArch64 Boot Proof layout was structurally checked at 11,816,960 bytes. Its detailed header, component hashes, `/init`, memory arithmetic, and evidence limits are in [`docs/minimal-aarch64-boot-image.md`](docs/minimal-aarch64-boot-image.md); the binary and initramfs are not distributed. LK/AVB acceptance, UDC/COM behavior, and a real boot remain unverified.
 - A read-only live WSL audit matched the baseline source's 77,161 inventoried regular files to the Samsung open-source archive, reconciled four experimental source deltas, checked the source symlinks, and verified the available Clang/LLD and GNU helper tools. The scoped findings and limits are in the [Phase 4 integrity report](docs/evidence/phase4-live-integrity.md); this does not establish full source-tree identity or bootability.
+- Two subsequent controlled AArch64 builds succeeded with unchanged measured source and fixed standard KBUILD metadata. Their `Image` and `vmlinux` bytes still differed. The [Phase 5 case study](docs/evidence/phase5-controlled-aarch64-rebuild.md) identifies a WLAN wall-clock build date as one confirmed contributor; full binary reproducibility remains unresolved, and neither kernel was booted on the phone.
 
 ## Current blockers
 
