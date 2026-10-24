@@ -1,8 +1,10 @@
-# Minimal AArch64 Boot Image — Offline Engineering Record
+# Minimal AArch64 Boot Image — Historical USB-ACM Engineering Record
+
+**Superseded artifact:** This document preserves the 2026-10-20 USB-ACM candidate as reviewed then. The later [Phase 6 console-only candidate](evidence/phase6-minimal-aarch64-offline.md) is the latest offline layout. Statements below calling the USB candidate “current” describe the earlier review's time frame and must not be transferred to Phase 6. Neither candidate has been booted on the phone.
 
 - **Device:** Samsung Galaxy A02 (`SM-A022F`)
 - **Reference firmware:** `A022FXXS3BWH1` (Android 11)
-- **Current artifact:** USB-ACM observation layout, retained locally only
+- **Artifact in this historical record:** USB-ACM observation layout, retained locally only
 - **Device result:** **UNVERIFIED**
 - **Flash readiness:** **BLOCKED / NO-GO**
 
@@ -10,7 +12,7 @@ This record documents an offline boot-layout experiment intended to answer one n
 
 ## Candidate identity and chronology
 
-The current USB-ACM layout is **11,816,960 bytes** with SHA-256 `1f4f147bdc9641f0836a35bf3de925cf17d4311399c418d74073aa5ce7d78450`. The digest and size were recalculated from the local image during this update and match the saved offline audit in [`evidence/minimal-boot-candidate-audit.json`](evidence/minimal-boot-candidate-audit.json). The image is explicitly unsigned and must not be flashed.
+The historical USB-ACM layout is **11,816,960 bytes** with SHA-256 `1f4f147bdc9641f0836a35bf3de925cf17d4311399c418d74073aa5ce7d78450`. The digest and size were recalculated from the local image during this update and match the saved offline audit in [`evidence/minimal-boot-candidate-audit.json`](evidence/minimal-boot-candidate-audit.json). The image is explicitly unsigned and must not be flashed.
 
 The local filesystem reports a last-write time of **2026-10-20 22:21:11 +03:00** for this file. That is ordinary filesystem metadata, not a signed or immutable build record; the actual creation time cannot be proven more strongly from retained evidence. The preflight report was saved later that evening.
 
@@ -20,9 +22,9 @@ Earlier layouts are distinct artifacts and their measurements must not be transf
 | --- | ---: | --- | --- |
 | Merged-r00 FDT, earlier clean-kernel layout | 11,878,400 | `460e9845bc6c36eba45806cca8e2030529ffcbd97810dff8c5f4313b5366bb25` | Earlier prototype with a merged tree; overlay handling at boot was unresolved. |
 | Source-built base FDT, earlier console-only layout | 11,814,912 | `c777304b479484561e9c4a2292c2cd3b27403d0d1a8473e90e8419a5c4d15fe4` | Used a different kernel gzip and a smaller 845-byte initramfs. |
-| **Current USB-ACM layout** | **11,816,960** | **`1f4f147bdc9641f0836a35bf3de925cf17d4311399c418d74073aa5ce7d78450`** | Uses the source-built base FDT and a 2,248-byte USB observation initramfs; local only. |
+| **Historical USB-ACM layout** | **11,816,960** | **`1f4f147bdc9641f0836a35bf3de925cf17d4311399c418d74073aa5ce7d78450`** | Uses the source-built base FDT and a 2,248-byte USB observation initramfs; local only. |
 
-The first two rows come from the earlier [boot-layout audit](boot-layout-audit.md). Their small size difference is not evidence of equivalence: the kernel compression and initramfs inputs differ. The current candidate is the newest image found in the retained work area.
+The first two rows come from the earlier [boot-layout audit](boot-layout-audit.md). Their small size difference is not evidence of equivalence: the kernel compression and initramfs inputs differ. That candidate was the newest image at this record's original review; the later Phase 6 candidate is documented separately.
 
 ## Production sequence and reproducibility boundary
 
@@ -86,7 +88,7 @@ A02 ARM64 boot probe: PID 1 entered; uname.machine=aarch64
 
 The syscalls follow Linux's [AArch64/asm-generic syscall definitions](https://github.com/torvalds/linux/blob/master/include/uapi/asm-generic/unistd.h); the gadget setup follows the Linux [configfs interface](https://docs.kernel.org/usb/gadget_configfs.html) and [ACM gadget documentation](https://docs.kernel.org/usb/gadget-testing.html). The retained candidate was built with sample VID/PID `1d6b:0104` and serial `A02ARM64PROBE`. USB-ID records identify `1d6b` as Linux Foundation and `0104` as its Multifunction Composite Gadget; this is not an identity assigned to this project and must not be reused as one. See [USB-IF vendor ID guidance](https://www.usb.org/getting-vendor-id) and the [USB ID record](https://usb-ids.gowdy.us/read/UD/1d6b).
 
-The retained candidate's `/init` ELF, CPIO, gzip, and image components passed the recorded offline format/hash checks; component and historical source hashes are in [`evidence/minimal-initramfs-checksums.txt`](evidence/minimal-initramfs-checksums.txt). Those checks did **not** validate ConfigFS writes. Source review found that the retained `/init` writes `idVendor` as unprefixed `1d6b`, `idProduct` as `0104`, `bcdUSB` as `0200`, and `bcdDevice` as `0100`. Upstream Linux v4.14 parses these u16 ConfigFS attributes with `kstrtou16(..., 0, ...)`: `1d6b` is rejected, while leading-zero `0104`/`0200`/`0100` are interpreted as octal values. Therefore the retained candidate's gadget setup is expected to stop at the vendor-ID write if the Samsung 4.14.186 tree retains this upstream parser. The exact Samsung vendor `configfs.c` was not available for this review, so this final version-specific inference remains **UNVERIFIED**; regardless, the candidate cannot be treated as a validated USB marker image.
+The retained candidate's `/init` ELF, CPIO, gzip, and image components passed the recorded offline format/hash checks; component and historical source hashes are in [`evidence/minimal-initramfs-checksums.txt`](evidence/minimal-initramfs-checksums.txt). Those checks did **not** validate ConfigFS writes. Source review found that the retained `/init` writes `idVendor` as unprefixed `1d6b`, `idProduct` as `0104`, `bcdUSB` as `0200`, and `bcdDevice` as `0100`. Upstream Linux v4.14 parses these u16 ConfigFS attributes with `kstrtou16(..., 0, ...)`: `1d6b` is rejected, while leading-zero `0104`/`0200`/`0100` are interpreted as octal values. Therefore the retained candidate's gadget setup is expected to stop at the vendor-ID write if the Samsung 4.14.186 tree retains this upstream parser. The exact Samsung vendor `configfs.c` was not available for this original review. A later Phase 6 source inspection confirmed the same base-autodetect parser, but the candidate has still not been run on the phone and cannot be treated as a validated USB marker image.
 
 The checked-in `init.c`, `build.sh`, and host reader were subsequently changed during this PR review; they are **not** the inputs to that candidate and were not inserted into it. The revised source emits explicit `0x`-prefixed VID/PID and BCD values, requires a caller-supplied authorized VID/PID and unique serial, and the listener waits for an exact PnP match. Any future candidate is a distinct artifact that must be built from the revised source, rehashed, and revalidated before it is considered for a hardware test.
 
@@ -108,7 +110,7 @@ The inspected stock boot image is Android header v2 with 2,048-byte pages and an
 | Android v2 header, section sizes, page padding, DT table | **PASS (offline parse)** | The byte layout is internally consistent and within the recorded PIT capacity. |
 | Kernel gzip, decompressed AArch64 Image header/hash | **PASS (offline)** | The payload decompresses to the expected AArch64 Image bytes. |
 | Init ELF64/AArch64, no dynamic interpreter, CPIO/gzip contents | **PASS (offline)** | The root archive contains the intended minimal static PID 1 and expected nodes. |
-| Retained candidate ConfigFS USB descriptor writes | **FAIL (source review; Samsung parser confirmation open)** | Its unprefixed `1d6b` value is rejected by the upstream v4.14 base-0 parser; subsequent leading-zero values would be octal. Do not rely on this candidate for the USB marker. |
+| Retained candidate ConfigFS USB descriptor writes | **FAIL (source review; Samsung parser confirmed in later Phase 6 follow-up)** | Its unprefixed `1d6b` value is rejected by the upstream v4.14 base-0 parser; subsequent leading-zero values would be octal. Do not rely on this candidate for the USB marker. |
 | ConfigFS/ACM/MTK OTG config symbols | **PASS (configuration only)** | Support is selected in the saved kernel configuration; a live UDC is not established. |
 | LK/AVB accepts this candidate; live K64 handoff | **UNVERIFIED** | Only compiled LK logic and stock metadata have static analysis. |
 | Phone runs the AArch64 kernel and reaches `/init` | **UNVERIFIED** | No candidate image has been written or booted on the phone. |

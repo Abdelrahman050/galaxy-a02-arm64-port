@@ -1,12 +1,14 @@
 # Minimal init USB ConfigFS Encoding and Device Identity
 
+**Chronology:** This case concerns the historical USB-ACM candidate and later source-only correction. The separate [Phase 6 console-only probe](../evidence/phase6-minimal-aarch64-offline.md) contains no USB identity and does not validate hardware observation.
+
 ## Technical scope
 
 This case covers the freestanding AArch64 /init used by the local Minimal Boot Proof, its USB ConfigFS descriptor writes, and the revised source/host listener committed for review. It does not claim CDC-ACM enumeration or marker receipt on the phone.
 
 ## Executive summary
 
-The retained candidate's /init writes an unprefixed USB vendor string 1d6b and leading-zero descriptor strings such as 0104, 0200, and 0100. Upstream Linux v4.14 parses these u16 ConfigFS fields with base autodetection: the vendor value is not valid hexadecimal without a 0x prefix, and leading zero selects octal. The exact Samsung 4.14.186 parser was not retained for this review, so the device-specific outcome remains an inference. A later source change emits explicit 0x-prefixed values, requires a caller-provided authorized VID/PID and unique serial, and waits for an exact PnP identity before opening a COM port. The corrected source was compiled separately but was not inserted into the retained image.
+The retained candidate's /init writes an unprefixed USB vendor string 1d6b and leading-zero descriptor strings such as 0104, 0200, and 0100. Upstream Linux v4.14 parses these u16 ConfigFS fields with base autodetection: the vendor value is not valid hexadecimal without a 0x prefix, and leading zero selects octal. The exact Samsung 4.14.186 parser was not retained for the original review. A later Phase 6 read-only inspection found the same base-autodetect `kstrtou16(page, 0, ...)` parser in the local Samsung source. The source-level mismatch is therefore confirmed for that tree; no device runtime attempt exists. A later source change emits explicit 0x-prefixed values, requires a caller-provided authorized VID/PID and unique serial, and waits for an exact PnP identity before opening a COM port. The corrected source was compiled separately but was not inserted into the retained image.
 
 ## Device, kernel, toolchain context
 
@@ -16,7 +18,7 @@ The candidate targets SM-A022F and its experimental ARM64 Linux 4.14.186 kernel.
 
 The original source wrote 1d6b as the VID and 0104 as the PID, with 0200 and 0100 for BCD values. It used a sample Linux Foundation vendor/product identity, not an identity assigned to this project. The host capture script at that stage required a COM port name before the gadget could enumerate, so it could not itself wait for this test device to appear.
 
-Upstream Linux v4.14's configfs.c uses kstrtou16 with base 0 for these descriptor fields. Under that parser, 1d6b fails numeric parsing, while 0104, 0200, and 0100 are octal values. This predicts failure at the vendor write if Samsung's 4.14.186 source retains the upstream parser. The exact Samsung file is not present in the retained reviewed inputs, so the prediction is not a verified Samsung runtime result.
+Upstream Linux v4.14's configfs.c uses kstrtou16 with base 0 for these descriptor fields. Under that parser, 1d6b fails numeric parsing, while 0104, 0200, and 0100 are octal values. This predicts failure at the vendor write if Samsung's 4.14.186 source retains the upstream parser. The exact Samsung file was absent from the original review inputs. Phase 6 later inspected the local Samsung copy and confirmed base-autodetect parsing. This strengthens the source-level finding but is still not a verified Samsung runtime result.
 
 ## Investigation and root cause
 
@@ -39,7 +41,7 @@ No live USB UDC binding, Windows PnP enumeration, COM capture, or marker receipt
 
 ## Remaining limitations
 
-- Samsung's exact configfs parser behavior is unverified against the vendor source.
+- Phase 6 confirmed the vendor source uses base-autodetect parsing; whether the old gadget code ran on the phone is unverified.
 - The revised source is not in the retained candidate binary.
 - No authorized test VID/PID has been provided in the evidence set.
 - UDC availability, electrical/OTG role, PnP identity format, and CDC-ACM behavior are untested on hardware.
@@ -56,8 +58,8 @@ No live USB UDC binding, Windows PnP enumeration, COM capture, or marker receipt
 
 The source fix is [commit f6adee4](https://github.com/Abdelrahman050/galaxy-a02-arm64-port/commit/f6adee4b5e9d2b0ba80213ba4a84dac186186e6a), with revised [init source](../../probes/minimal-aarch64-usb-acm/init.c), [build helper](../../probes/minimal-aarch64-usb-acm/build.sh), and [host reader](../../probes/minimal-aarch64-usb-acm/capture_usb_acm.ps1). See [Minimal AArch64 Boot Image](../minimal-aarch64-boot-image.md) and [flash readiness](../flash-readiness.md).
 
-The parser behavior is linked to the primary upstream [Linux v4.14 configfs.c](https://github.com/torvalds/linux/blob/v4.14/drivers/usb/gadget/configfs.c#L147-L170). That is not a substitute for inspecting the Samsung vendor copy. The original local init source hash is eed092d598d0dfaaabd3fe62a9c365058bd5cb9f9e15a78cff1d5fd904761368; the retained candidate hash is documented separately in the boot-image report. The binary and full local initramfs artifacts are not distributed.
+The parser behavior is linked to the primary upstream [Linux v4.14 configfs.c](https://github.com/torvalds/linux/blob/v4.14/drivers/usb/gadget/configfs.c#L147-L170). The Phase 6 follow-up separately inspected the local Samsung vendor copy; neither source check proves runtime gadget behavior. The original local init source hash is eed092d598d0dfaaabd3fe62a9c365058bd5cb9f9e15a78cff1d5fd904761368; the retained candidate hash is documented separately in the boot-image report. The binary and full local initramfs artifacts are not distributed.
 
 ## Current status
 
-**PARTIALLY RESOLVED.** The revised source corrected the encoding and identity-discovery design and passed a separate compile/link check. The retained candidate still contains the earlier source. Samsung parser behavior, UDC/COM operation, and marker delivery remain **UNVERIFIED**.
+**PARTIALLY RESOLVED.** The revised source corrected the encoding and identity-discovery design and passed a separate compile/link check. The retained candidate still contains the earlier source. Samsung parser source behavior is now confirmed; UDC/COM operation and marker delivery remain **UNVERIFIED**.
